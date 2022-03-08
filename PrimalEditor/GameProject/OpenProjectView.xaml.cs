@@ -22,5 +22,27 @@ namespace PrimalEditor.GameProject
         {
             InitializeComponent();
         }
+        private void OnOpen_Button_Click(object sender, RoutedEventArgs e)
+        {
+            TryOpenSelectProject();
+        }
+        private void OnListBoxItemMouse_DoubleClick(object sender, RoutedEventArgs e)
+        {
+            TryOpenSelectProject();
+        }
+        void TryOpenSelectProject()
+        {
+            var project = OpenProject.Open(projectsListBox.SelectedItem as ProjectData);
+
+            bool dialogResult = false;
+            var win = Window.GetWindow(this);
+            if (project != null)
+            {
+                dialogResult = true;
+                win.DataContext = project;
+            }
+            win.DialogResult = dialogResult;
+            win.Close();
+        }
     }
 }

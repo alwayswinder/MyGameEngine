@@ -48,7 +48,7 @@ namespace PrimalEditor.GameProject
                     if (File.Exists(project.FullPath))
                     {
                         project.Icon = File.ReadAllBytes($@"{project.ProjectPath}\.Primal\Icon.png");
-                        project.Screenshot = File.ReadAllBytes($@"{project.ProjectPath}.\Primal\Screenshot.png");
+                        project.Screenshot = File.ReadAllBytes($@"{project.ProjectPath}\.Primal\Screenshot.png");
                         _projects.Add(project);
                     }
                 }
@@ -75,7 +75,7 @@ namespace PrimalEditor.GameProject
             }
             WriteProjectData();
 
-            return null;
+            return Project.Load(project.FullPath);
         }
         static OpenProject()
         {

@@ -12,6 +12,11 @@
     <StackPanel Background="White">
         <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
             <ListBox Width="195" Height="250" ItemsSource="{Binding Projects}" x:Name="projectsListBox" SelectedIndex="0">
+                <ListBox.ItemContainerStyle>
+                    <Style TargetType="ListBoxItem">
+                        <EventSetter Event="MouseDoubleClick" Handler="OnListBoxItemMouse_DoubleClick"></EventSetter>
+                    </Style>    
+                </ListBox.ItemContainerStyle>
                 <ListBox.ItemTemplate>
                     <DataTemplate>
                         <StackPanel Orientation="Horizontal">
@@ -23,12 +28,12 @@
             </ListBox>
             <Border Width="400" Height="250" Margin="5,0,0,0">
                 <Border.Background>
-                    <ImageBrush ImageSource="{Binding Path=SelectedItem.Screenshot, ElementName=templateListBox}"/>
+                    <ImageBrush ImageSource="{Binding Path=SelectedItem.Screenshot, ElementName=projectsListBox}"/>
                 </Border.Background>
             </Border>
         </StackPanel>
         <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,30,0,0">
-            <Button Content="Open" Width="95" IsDefault="True"/>
+            <Button Content="Open" Width="95" IsDefault="True" Click="OnOpen_Button_Click"/>
             <Button Content="Exit" Width="95" Margin="30,0,0,0" IsCancel="True"/>
         </StackPanel>
     </StackPanel>
