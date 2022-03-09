@@ -45,7 +45,7 @@ namespace PrimalEditor
         private void OpenProjectBrowserDialog()
         {
             var projectBrowser = new ProjectBrowserDialg();
-            if(projectBrowser.ShowDialog() == false || DataContext == null)
+            if(projectBrowser.ShowDialog() == false || projectBrowser.DataContext == null)
             {
                 Application.Current.Shutdown();
             }

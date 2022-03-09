@@ -7,6 +7,12 @@
     </ApplicationDefinition>
   </ItemGroup>
   <ItemGroup>
+    <Compile Update="Editors\WorldEditor\ProjectLayoutView.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="Editors\WorldEditor\WorldEditorView.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Update="GameProject\CreateProjectView.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -16,8 +22,17 @@
     <Compile Update="GameProject\ProjectBrowserDialg.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Update="Utilities\UndoRedoView.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Page Update="Editors\WorldEditor\ProjectLayoutView.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Editors\WorldEditor\WorldEditorView.xaml">
+      <SubType>Designer</SubType>
+    </Page>
     <Page Update="GameProject\CreateProjectView.xaml">
       <SubType>Designer</SubType>
     </Page>
@@ -28,6 +43,9 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Update="MainWindow.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Utilities\UndoRedoView.xaml">
       <SubType>Designer</SubType>
     </Page>
   </ItemGroup>
