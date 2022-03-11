@@ -1,4 +1,5 @@
-﻿using PrimalEditor.GameProject;
+﻿using PrimalEditor.Components;
+using PrimalEditor.GameProject;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -23,6 +24,22 @@ namespace PrimalEditor.Editors
         {
             InitializeComponent();
         }
-       
+
+        private void OnAddGameEntity_Button_Click(object sender, RoutedEventArgs e)
+        {
+            var btn = sender as Button;
+            var vm = btn.DataContext as Scene;
+            vm.AddGameEntityCommand.Execute(new GameEntity(vm) { Name = "Empty Game Entity" });
+        }
+
+        private void OnGameEntitys_ListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            var Listbt = sender as ListBox;
+            if (Listbt.SelectedItems.Count > 0)
+            {
+                var entity = Listbt.SelectedItems[0];
+                GameEntityView.Instance.DataContext = entity;
+            }
+        }
     }
 }

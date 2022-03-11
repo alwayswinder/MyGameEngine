@@ -157,7 +157,7 @@ namespace PrimalEditor.GameProject
                 //var project = new Project(ProjectName, path);
                 //Serializer.ToFile(project, path + $"{ProjectName}" + Project.Extension);
                 var projectXml = File.ReadAllText(template.ProjectFilePath);
-                projectXml = string.Format(projectXml, ProjectName, ProjectPath);
+                projectXml = string.Format(projectXml, ProjectName, path);
                 var projectPath = Path.GetFullPath(Path.Combine(path, $"{ProjectName}{Project.Extension}"));
                 File.WriteAllText(projectPath, projectXml);
                 
