@@ -15,17 +15,17 @@ namespace PrimalEditor.Components
     [KnownType(typeof(Transform))]
     public class GameEntity : ViewModeBase
     {
-        private bool _isEnable;
+        private bool _isEnabled = true;
         [DataMember]
-        public bool IsEnable
+        public bool IsEnabled
         {
-            get => _isEnable;
+            get => _isEnabled;
             set
             {
-                if (_isEnable != value)
+                if (_isEnabled != value)
                 {
-                    _isEnable = value;
-                    OnPropertyChanged(nameof(IsEnable));
+                    _isEnabled = value;
+                    OnPropertyChanged(nameof(IsEnabled));
                 }
             }
         }
@@ -65,6 +65,14 @@ namespace PrimalEditor.Components
                 Project.UndoRedo.Add(new UndoRedoAction(nameof(Name), this,
                     oldName, x, $"Rename entity '{oldName}' to {x}"));
             },x => x != _name);
+
+            EnableCommand = new RelayCommand<bool>(x =>
+            {
+                var oldValue = _isEnabled;
+                IsEnabled = x;
+                Project.UndoRedo.Add(new UndoRedoAction(nameof(IsEnabled), this,
+                    oldValue, x, x ? $"Enable {Name}" : $"Disable {Name}"));
+            });
         }
         public GameEntity(Scene scene)
         {

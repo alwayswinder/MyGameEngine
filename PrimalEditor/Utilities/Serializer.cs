@@ -34,7 +34,8 @@ namespace PrimalEditor.Utilities
             catch (Exception ex)
             {
                 Debug.WriteLine(ex.Message);
-                return default(T);
+                Logger.Log(MessageType.Error, $"Failed to deserialize {path}");
+                throw;
             }
         }
     }
