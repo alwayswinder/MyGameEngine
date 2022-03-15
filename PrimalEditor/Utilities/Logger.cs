@@ -18,7 +18,7 @@ namespace PrimalEditor.Utilities
     class LogMessage
     {
         public DateTime Time { get; }
-        public MessageType MessageTypes { get; }
+        public MessageType MessageType { get; }
         public string Message { get; }
         public string File { get; }
         public string Caller { get; }
@@ -27,7 +27,7 @@ namespace PrimalEditor.Utilities
         public LogMessage(MessageType type, string msg, string file, string caller, int line)
         {
             Time = DateTime.Now;
-            MessageTypes = type;
+            MessageType = type;
             Message = msg;
             File = Path.GetFileName(file);
             Caller = caller;
@@ -69,7 +69,7 @@ namespace PrimalEditor.Utilities
         {
             FilteredMessages.Filter += (s, e) =>
             {
-                var type = (int)(e.Item as LogMessage).MessageTypes;
+                var type = (int)(e.Item as LogMessage).MessageType;
                 e.Accepted = (type & _messageFilter) != 0;
             };
         }

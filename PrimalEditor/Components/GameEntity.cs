@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
+using System.Linq;
 using System.Runtime.Serialization;
 using System.Text;
 using System.Windows.Input;
@@ -13,7 +14,7 @@ namespace PrimalEditor.Components
 {
     [DataContract]
     [KnownType(typeof(Transform))]
-    public class GameEntity : ViewModeBase
+    class GameEntity : ViewModeBase
     {
         private bool _isEnabled = true;
         [DataMember]
@@ -83,5 +84,63 @@ namespace PrimalEditor.Components
             _components.Add(new Transform(this));
             //OnPropertyChanged(nameof(Components));
         }
+    }
+    abstract class MSEntity:ViewModeBase
+    {
+        private bool? _isEnabled = true;
+        [DataMember]
+        public bool? IsEnabled
+        {
+            get => _isEnabled;
+            set
+            {
+                if (_isEnabled != value)
+                {
+                    _isEnabled = value;
+                    OnPropertyChanged(nameof(IsEnabled));
+                }
+            }
+        }
+
+        private string _name;
+        [DataMember]
+        public string Name
+        {
+            get => _name;
+            set
+            {
+                if (_name != value)
+                {
+                    _name = value;
+                    OnPropertyChanged(nameof(Name));
+                }
+            }
+        }
+
+        private readonly ObservableCollection<IMSComponent> _components = new ObservableCollection<IMSComponent>();
+        public ReadOnlyObservableCollection<IMSComponent> Components { get; }
+
+        public List<GameEntity> SelectedEntities { get; }
+        protected virtual bool UpdateGameEntities(string propertyName)
+        {
+            switch(propertyName)
+            {
+                case nameof(IsEnabled):SelectedEntities.ForEach(x => x.IsEnabled = IsEnabled.Value);return true;
+                case nameof(Name):
+            }
+        }
+        public MSEntity(List<GameEntity> entities)
+        {
+            Debug.Assert(entities?.Any() == true);
+            Components = new ReadOnlyObservableCollection<IMSComponent>(_components);
+            SelectedEntities = entities;
+            PropertyChanged += (s, e) => { UpdateGameEntities(e.PropertyName); };
+        }
+
+        
+    }
+    class MSGameEntity : MSEntity
+    {
+
     }
 }

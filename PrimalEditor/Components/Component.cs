@@ -6,8 +6,9 @@ using System.Text;
 
 namespace PrimalEditor.Components
 {
+    interface IMSComponent { }
     [DataContract]
-    public class Component : ViewModeBase
+    abstract public class Component : ViewModeBase
     {
         [DataMember]
         public GameEntity Owner { get; private set; }
@@ -17,4 +18,6 @@ namespace PrimalEditor.Components
             Owner = entity;
         }
     }
+    abstract class MSComponent<T>:ViewModeBase, IMSComponent where T:Component
+    { }
 }

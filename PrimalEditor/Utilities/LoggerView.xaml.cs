@@ -21,6 +21,26 @@ namespace PrimalEditor.Utilities
         public LoggerView()
         {
             InitializeComponent();
+            Loaded += (s, e) =>
+            {
+                Logger.Log(MessageType.Info, "Infomation Message!");
+                Logger.Log(MessageType.Error, "Error Message!");
+                Logger.Log(MessageType.Warning, "Warning Message!");
+            };
+        }
+
+        private void OnClear_Button_Click(object sender, RoutedEventArgs e)
+        {
+            Logger.Clear();
+        }
+
+        private void OnMessageFilter_Button_Click(object sender, RoutedEventArgs e)
+        {
+            var filter = 0x0;
+            if (toggleInfo.IsChecked == true) filter |= (int)MessageType.Info;
+            if (toggleWarning.IsChecked == true) filter |= (int)MessageType.Warning;
+            if (toggleError.IsChecked == true) filter |= (int)MessageType.Error;
+            Logger.SetMessageFilter(filter);
         }
     }
 }
