@@ -25,5 +25,15 @@ namespace PrimalEditor.Editors
             DataContext = null;
             Instance = this;
         }
+
+        private void OnName_TextBox_GotKeyboardFocus(object sender, KeyboardFocusChangedEventArgs e)
+        {
+
+        }
+
+        private void OnName_TextBox_LostkeyboardFocus(object sender, KeyboardFocusChangedEventArgs e)
+        {
+
+        }
     }
 }
