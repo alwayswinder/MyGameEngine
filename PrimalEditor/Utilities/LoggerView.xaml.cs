@@ -23,9 +23,9 @@ namespace PrimalEditor.Utilities
             InitializeComponent();
             Loaded += (s, e) =>
             {
-                Logger.Log(MessageType.Info, "Infomation Message!");
-                Logger.Log(MessageType.Error, "Error Message!");
-                Logger.Log(MessageType.Warning, "Warning Message!");
+                //Logger.Log(MessageType.Info, "Infomation Message!");
+                //Logger.Log(MessageType.Error, "Error Message!");
+                //Logger.Log(MessageType.Warning, "Warning Message!");
             };
         }
 
