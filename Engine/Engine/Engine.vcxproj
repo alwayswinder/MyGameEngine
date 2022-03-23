@@ -24,6 +24,10 @@
     <ClInclude Include="Common\PrimitiveTypes.h" />
     <ClInclude Include="Components\ComponentsCommon.h" />
     <ClInclude Include="Components\Entity.h" />
+    <ClInclude Include="Components\Transform.h" />
+    <ClInclude Include="EngineAPI\GameEntity.h" />
+    <ClInclude Include="EngineAPI\TransformComponent.h" />
+    <ClInclude Include="Utilities\utilities.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Components\Entity.cpp" />
@@ -143,6 +147,7 @@
       <BufferSecurityCheck>false</BufferSecurityCheck>
       <FloatingPointModel>Fast</FloatingPointModel>
       <AdditionalIncludeDirectories>$(ProjectDir)Common</AdditionalIncludeDirectories>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>

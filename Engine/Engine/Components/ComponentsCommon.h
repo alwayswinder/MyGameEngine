@@ -2,8 +2,5 @@
 
 #include "CommonHeaders.h"
 #include "id.h"
+#include "../EngineAPI/GameEntity.h"
 
-namespace primal :: game_entity
-{
-	DEFINE_TYPED_ID(entity_id);
-}
