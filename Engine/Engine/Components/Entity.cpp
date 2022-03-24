@@ -12,9 +12,8 @@ namespace primal::game_entity
 
 	transform::component entity::transform() const
 	{
-		assert(is_valid());
+		assert(is_alive(*this));
 		const id::id_type index{ id::index(_id) };
-		assert(generations[index] == id::generation(_id));
 		return transforms[index];
 	}
 
@@ -43,7 +42,7 @@ namespace primal::game_entity
 
 		//create transform component
 		transforms[index] = transform::create_transfrom(*info.transform, new_entity);
-		if (!transforms[index].is_valid())	return entity{};
+		if (!transforms[index].is_valid())	return {};
 
 
 		return new_entity;
