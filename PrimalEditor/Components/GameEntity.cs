@@ -16,6 +16,43 @@ namespace PrimalEditor.Components
     [KnownType(typeof(Transform))]
     public class GameEntity : ViewModeBase
     {
+        private int _entityId = ID.INVALID_ID;
+        public int EntityId 
+        {
+            get => _entityId;
+            set
+            {
+                if(_entityId != value)
+                {
+                    _entityId = value;
+                    OnPropertyChanged(nameof(EntityId));
+                }
+            }
+        }
+
+        private bool _isActive = true;
+        public bool IsActive
+        {
+            get => _isActive;
+            set
+            {
+                if (_isActive != value)
+                {
+                    _isActive = value;
+                    if(_isActive)
+                    {
+                        EntityId = ENgineAPI::CreateGameEntity(this);
+                        Debug.Assert(ID.IsValid(_entityId));
+                    }
+                    else
+                    {
+                        EngineAPI::RemoveGameEntity(this);
+                    }
+                    OnPropertyChanged(nameof(IsActive));
+                }
+            }
+        }
+
         private bool _isEnabled = true;
         [DataMember]
         public bool IsEnabled

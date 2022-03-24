@@ -1,11 +1,11 @@
 
-#include "Test.h"
+#pragma comment(lib,"engine.lib")
+
 
 #define  TEST_ENTITY_COMPONENTS 1
 
 #if TEST_ENTITY_COMPONENTS
 #include "TestEntityComponents.h"
-
 
 #else
 #error One of the test need to be enabled
@@ -14,6 +14,10 @@
 
 int main()
 {
+#if _DEBUG
+	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
+#endif
+
 	engine_test test{};
 	if (test.initialize())
 	{
@@ -22,4 +26,5 @@ int main()
 
 
 	test.shutdown();
+	std::cout << "test!";
 }
