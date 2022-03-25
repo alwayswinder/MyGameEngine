@@ -9,6 +9,8 @@ using System.Linq;
 using System.Runtime.Serialization;
 using System.Text;
 using System.Windows.Input;
+using PrimalEditor.DllWrapper;
+
 
 namespace PrimalEditor.Components
 {
@@ -30,7 +32,7 @@ namespace PrimalEditor.Components
             }
         }
 
-        private bool _isActive = true;
+        private bool _isActive;
         public bool IsActive
         {
             get => _isActive;
@@ -41,12 +43,12 @@ namespace PrimalEditor.Components
                     _isActive = value;
                     if(_isActive)
                     {
-                        EntityId = ENgineAPI::CreateGameEntity(this);
+                        EntityId = EngineAPI.CreateGameEntity(this);
                         Debug.Assert(ID.IsValid(_entityId));
                     }
                     else
                     {
-                        EngineAPI::RemoveGameEntity(this);
+                        EngineAPI.RemoveGameEntity(this);
                     }
                     OnPropertyChanged(nameof(IsActive));
                 }
@@ -86,6 +88,10 @@ namespace PrimalEditor.Components
         [DataMember(Name =nameof(Components))]
         private readonly ObservableCollection<Component> _components = new ObservableCollection<Component>();
         public ReadOnlyObservableCollection<Component> Components { get; private set; }
+
+        public Component GetComponent(Type type) => Components.FirstOrDefault(c => c.GetType() == type);
+        public T GetComponent<T>() where T : Component => GetComponent(typeof(T)) as T;
+
         //public ICommand RenameCommand { get; private set; }
         //public ICommand EnableCommand { get; private set; }
         [OnDeserialized]
