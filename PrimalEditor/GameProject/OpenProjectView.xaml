@@ -6,6 +6,7 @@
              xmlns:local="clr-namespace:PrimalEditor.GameProject"
              mc:Ignorable="d" Width="800"
              d:DesignHeight="450" d:DesignWidth="800">
+
     <UserControl.DataContext>
         <local:OpenProject />
     </UserControl.DataContext>

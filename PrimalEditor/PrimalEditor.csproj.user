@@ -38,6 +38,9 @@
     <Page Update="Dictionaries\ControlTemplates.xaml">
       <SubType>Designer</SubType>
     </Page>
+    <Page Update="Dictionaries\EditorColors.xaml">
+      <SubType>Designer</SubType>
+    </Page>
     <Page Update="Editors\WorldEditor\GameEntityView.xaml">
       <SubType>Designer</SubType>
     </Page>
