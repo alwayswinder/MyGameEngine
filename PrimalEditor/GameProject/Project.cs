@@ -13,7 +13,7 @@ using System.Windows.Input;
 namespace PrimalEditor.GameProject
 {
     [DataContract(Name ="Game")]
-    public class Project: ViewModeBase
+    class Project: ViewModeBase
     {
         [DataMember]
         public string Name { get; private set; } = "New Project";

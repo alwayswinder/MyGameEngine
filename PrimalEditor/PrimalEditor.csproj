@@ -17,4 +17,8 @@
     <OutputPath>..\x64\Release\</OutputPath>
   </PropertyGroup>
 
+  <ItemGroup>
+    <None Include="..\.editorconfig" Link=".editorconfig" />
+  </ItemGroup>
+
 </Project>

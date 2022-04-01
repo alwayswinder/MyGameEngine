@@ -16,7 +16,7 @@ namespace PrimalEditor.Components
 {
     [DataContract]
     [KnownType(typeof(Transform))]
-    public class GameEntity : ViewModeBase
+    class GameEntity : ViewModeBase
     {
         private int _entityId = ID.INVALID_ID;
         public int EntityId 
@@ -92,8 +92,6 @@ namespace PrimalEditor.Components
         public Component GetComponent(Type type) => Components.FirstOrDefault(c => c.GetType() == type);
         public T GetComponent<T>() where T : Component => GetComponent(typeof(T)) as T;
 
-        //public ICommand RenameCommand { get; private set; }
-        //public ICommand EnableCommand { get; private set; }
         [OnDeserialized]
         void OnDeserialized(StreamingContext content)
         {
@@ -102,22 +100,6 @@ namespace PrimalEditor.Components
                 Components = new ReadOnlyObservableCollection<Component>(_components);
                 OnPropertyChanged(nameof(Components));
             }
-            //RenameCommand = new RelayCommand<string>(x =>
-            //{
-            //    var oldName = _name;
-            //    Name = x;
-            //    Project.UndoRedo.Add(new UndoRedoAction(nameof(Name), this,
-            //        oldName, x, $"Rename entity '{oldName}' to {x}"));
-            //},x => x != _name);
-
-            //EnableCommand = new RelayCommand<bool>(x =>
-            //{
-            //    var oldValue = _isEnabled;
-            //    IsEnabled = x;
-            //    Project.UndoRedo.Add(new UndoRedoAction(nameof(IsEnabled), this,
-            //        oldValue, x, x ? $"Enable {Name}" : $"Disable {Name}"));
-            //    Logger.Log(MessageType.Info, "Call EnableCommand");
-            //});
         }
         public GameEntity(Scene scene)
         {
@@ -167,41 +149,36 @@ namespace PrimalEditor.Components
 
         public List<GameEntity> SelectedEntities { get; }
      
-        public static float? GetMixedValue(List<GameEntity> entities, Func<GameEntity, float> getProperty)
+        private void MakeComponentList()
         {
-            var value = getProperty(entities.First());
-            foreach(var entity in entities.Skip(1))
+            _components.Clear();
+            var firstEntity = SelectedEntities.FirstOrDefault();
+            if (firstEntity == null) return;
+            foreach(var Component in firstEntity.Components)
             {
-                if(!value.isTheSameAs(getProperty(entity)))
+                var type = Component.GetType();
+                if(!SelectedEntities.Skip(1).Any(entity=>entity.GetComponent(type) == null))
                 {
-                    return null;
+                    Debug.Assert(Components.FirstOrDefault(x => GetType() == type) == null);
+                    _components.Add(Component.GetMultiSelectionComponent(this));
                 }
             }
-            return value;
         }
-        public static bool? GetMixedValue(List<GameEntity> entities, Func<GameEntity, bool> getProperty)
+
+        public static float? GetMixedValue<T>(List<T> objects, Func<T, float> getProperty)
         {
-            var value = getProperty(entities.First());
-            foreach (var entity in entities.Skip(1))
-            {
-                if (value != getProperty(entity))
-                {
-                    return null;
-                }
-            }
-            return value;
+            var value = getProperty(objects.First());
+            return objects.Skip(1).Any(x => !getProperty(x).isTheSameAs(value)) ? (float?)null : value;
         }
-        public static string GetMixedValue(List<GameEntity> entities, Func<GameEntity, string> getProperty)
+        public static bool? GetMixedValue<T>(List<T> objects, Func<T, bool> getProperty)
         {
-            var value = getProperty(entities.First());
-            foreach (var entity in entities.Skip(1))
-            {
-                if (value != getProperty(entity))
-                {
-                    return null;
-                }
-            }
-            return value;
+            var value = getProperty(objects.First());
+            return objects.Skip(1).Any(x => value != getProperty(x)) ? (bool?)null : value;
+        }
+        public static string GetMixedValue<T>(List<T> objects, Func<T, string> getProperty)
+        {
+            var value = getProperty(objects.First());
+            return objects.Skip(1).Any(x => value != getProperty(x)) ? null : value;
         }
         protected virtual bool UpdateGameEntities(string propertyName)
         {
@@ -222,6 +199,7 @@ namespace PrimalEditor.Components
         {
             _enableUpdates = false;
             UpdateMSGameEntity();
+            MakeComponentList();
             _enableUpdates = true;
         }
         public MSEntity(List<GameEntity> entities)

@@ -41,7 +41,7 @@ namespace PrimalEditor.Utilities
     }
     public class UndoRedo
     {
-        private bool _enableAdd = true;
+        private bool _enableAdd;
         private readonly ObservableCollection<IUndoRedo> _redoList = new ObservableCollection<IUndoRedo>();
         private readonly ObservableCollection<IUndoRedo> _undoList = new ObservableCollection<IUndoRedo>();
         public ReadOnlyObservableCollection<IUndoRedo> RedoList { get; }

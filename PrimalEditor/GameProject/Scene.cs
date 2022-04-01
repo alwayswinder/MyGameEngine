@@ -11,7 +11,7 @@ using System.Windows.Input;
 namespace PrimalEditor.GameProject
 {
     [DataContract]
-    public class Scene : ViewModeBase
+    class Scene : ViewModeBase
     {
         private string _name;
         [DataMember]
