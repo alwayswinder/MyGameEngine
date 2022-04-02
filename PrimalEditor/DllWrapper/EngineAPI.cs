@@ -37,7 +37,7 @@ namespace PrimalEditor.DllWrapper
             //Transform
             {
                 var c = entity.GetComponent<Transform>();
-                desc.Transform.Position = c.Postion;
+                desc.Transform.Position = c.Position;
                 desc.Transform.Rotation = c.Rotation;
                 desc.Transform.Scale = c.Scale;
             }

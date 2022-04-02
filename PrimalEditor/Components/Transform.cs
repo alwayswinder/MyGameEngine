@@ -8,11 +8,11 @@ using System.Text;
 namespace PrimalEditor.Components
 {
     [DataContract]
-    class Transform :Component
+    class Transform : Component
     {
         private Vector3 _position;
         [DataMember]
-        public Vector3 Postion
+        public Vector3 Position
         {
             get => _position;
             set
@@ -20,7 +20,7 @@ namespace PrimalEditor.Components
                 if (_position != value)
                 {
                     _position = value;
-                    OnPropertyChanged(nameof(Postion));
+                    OnPropertyChanged(nameof(Position));
                 }
             }
         }
@@ -53,7 +53,7 @@ namespace PrimalEditor.Components
             }
         }
         public override IMSComponent GetMultiSelectionComponent(MSEntity msEntity) => new MSTransform(msEntity);
-        public Transform(GameEntity owner): base(owner)
+        public Transform(GameEntity owner) : base(owner)
         {
 
         }
@@ -66,7 +66,7 @@ namespace PrimalEditor.Components
             get => _posX;
             set
             {
-                if(_posX.isTheSameAs(value))
+                if (!_posX.isTheSameAs(value))
                 {
                     _posX = value;
                     OnPropertyChanged(nameof(PosX));
@@ -79,7 +79,7 @@ namespace PrimalEditor.Components
             get => _posY;
             set
             {
-                if (_posY.isTheSameAs(value))
+                if (!_posY.isTheSameAs(value))
                 {
                     _posY = value;
                     OnPropertyChanged(nameof(PosY));
@@ -92,7 +92,7 @@ namespace PrimalEditor.Components
             get => _posZ;
             set
             {
-                if (_posZ.isTheSameAs(value))
+                if (!_posZ.isTheSameAs(value))
                 {
                     _posZ = value;
                     OnPropertyChanged(nameof(PosZ));
@@ -105,7 +105,7 @@ namespace PrimalEditor.Components
             get => _rotX;
             set
             {
-                if (_rotX.isTheSameAs(value))
+                if (!_rotX.isTheSameAs(value))
                 {
                     _rotX = value;
                     OnPropertyChanged(nameof(RotX));
@@ -118,7 +118,7 @@ namespace PrimalEditor.Components
             get => _rotY;
             set
             {
-                if (_rotY.isTheSameAs(value))
+                if (!_rotY.isTheSameAs(value))
                 {
                     _rotY = value;
                     OnPropertyChanged(nameof(RotY));
@@ -131,7 +131,7 @@ namespace PrimalEditor.Components
             get => _rotZ;
             set
             {
-                if (_rotZ.isTheSameAs(value))
+                if (!_rotZ.isTheSameAs(value))
                 {
                     _rotZ = value;
                     OnPropertyChanged(nameof(RotZ));
@@ -144,7 +144,7 @@ namespace PrimalEditor.Components
             get => _scaleX;
             set
             {
-                if (_scaleX.isTheSameAs(value))
+                if (!_scaleX.isTheSameAs(value))
                 {
                     _scaleX = value;
                     OnPropertyChanged(nameof(ScaleX));
@@ -157,7 +157,7 @@ namespace PrimalEditor.Components
             get => _scaleY;
             set
             {
-                if (_scaleY.isTheSameAs(value))
+                if (!_scaleY.isTheSameAs(value))
                 {
                     _scaleY = value;
                     OnPropertyChanged(nameof(ScaleY));
@@ -170,7 +170,7 @@ namespace PrimalEditor.Components
             get => _scaleZ;
             set
             {
-                if (_scaleZ.isTheSameAs(value))
+                if (!_scaleZ.isTheSameAs(value))
                 {
                     _scaleZ = value;
                     OnPropertyChanged(nameof(ScaleZ));
@@ -179,12 +179,12 @@ namespace PrimalEditor.Components
         }
         protected override bool UpdateComponents(string propertyName)
         {
-            switch(propertyName)
+            switch (propertyName)
             {
                 case nameof(PosX):
                 case nameof(PosY):
                 case nameof(PosZ):
-                    SelectedComponents.ForEach(c => c.Postion = new Vector3(_posX ?? c.Postion.X, _posY ?? c.Postion.Y, _posZ ?? c.Postion.Z));
+                    SelectedComponents.ForEach(c => c.Position = new Vector3(_posX ?? c.Position.X, _posY ?? c.Position.Y, _posZ ?? c.Position.Z));
                     return true;
                 case nameof(RotX):
                 case nameof(RotY):
@@ -201,9 +201,9 @@ namespace PrimalEditor.Components
         }
         protected override bool UpdateMSComponent()
         {
-            PosX = MSEntity.GetMixedValue(SelectedComponents, new Func<Transform, float>(x => x.Postion.X));
-            PosY = MSEntity.GetMixedValue(SelectedComponents, new Func<Transform, float>(x => x.Postion.Y));
-            PosZ = MSEntity.GetMixedValue(SelectedComponents, new Func<Transform, float>(x => x.Postion.Z));
+            PosX = MSEntity.GetMixedValue(SelectedComponents, new Func<Transform, float>(x => x.Position.X));
+            PosY = MSEntity.GetMixedValue(SelectedComponents, new Func<Transform, float>(x => x.Position.Y));
+            PosZ = MSEntity.GetMixedValue(SelectedComponents, new Func<Transform, float>(x => x.Position.Z));
 
             RotX = MSEntity.GetMixedValue(SelectedComponents, new Func<Transform, float>(x => x.Rotation.X));
             RotY = MSEntity.GetMixedValue(SelectedComponents, new Func<Transform, float>(x => x.Rotation.Y));
@@ -214,10 +214,10 @@ namespace PrimalEditor.Components
             ScaleZ = MSEntity.GetMixedValue(SelectedComponents, new Func<Transform, float>(x => x.Scale.Z));
 
 
-            return false;
+            return true;
         }
 
-        public MSTransform(MSEntity msEntity): base(msEntity)
+        public MSTransform(MSEntity msEntity) : base(msEntity)
         {
             Refresh();
         }

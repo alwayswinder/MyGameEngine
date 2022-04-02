@@ -9,10 +9,16 @@
     </ApplicationDefinition>
   </ItemGroup>
   <ItemGroup>
+    <Compile Update="Editors\WorldEditor\ComponentView.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Update="Editors\WorldEditor\GameEntityView.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Update="Editors\WorldEditor\ProjectLayoutView.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="Editors\WorldEditor\TransformView.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Update="Editors\WorldEditor\WorldEditorView.xaml.cs">
@@ -41,10 +47,16 @@
     <Page Update="Dictionaries\EditorColors.xaml">
       <SubType>Designer</SubType>
     </Page>
+    <Page Update="Editors\WorldEditor\ComponentView.xaml">
+      <SubType>Designer</SubType>
+    </Page>
     <Page Update="Editors\WorldEditor\GameEntityView.xaml">
       <SubType>Designer</SubType>
     </Page>
     <Page Update="Editors\WorldEditor\ProjectLayoutView.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Editors\WorldEditor\TransformView.xaml">
       <SubType>Designer</SubType>
     </Page>
     <Page Update="Editors\WorldEditor\WorldEditorView.xaml">
