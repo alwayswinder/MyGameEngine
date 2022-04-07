@@ -43,28 +43,35 @@ namespace PrimalEditor.Editors
                 _propertyChange = false;
                 return null;
             }
-            var selection = vm.SelectedComponents.Select(transform => (transform, transform.Position)).ToList();
+            var selection = vm.SelectedComponents.Select(x => selector(x)).ToList();
             return new Action(() =>
             {
-                selection.ForEach(item => item.transform.Position = item.Position);
+                selection.ForEach(x => forEachAction(x));
                 (GameEntityView.Instance.DataContext as MSEntity)?.GetMSComponent<MSTransform>().Refresh();
             });
+        }
+        private Action GetPositionAction() => GetAction((x) => (x, x.Position), (x) => x.transfrom.Position = x.Item2);
+        private Action GetRotationAction() => GetAction((x) => (x, x.Rotation), (x) => x.transfrom.Rotation = x.Item2);
+        private Action GetScaleAction() => GetAction((x) => (x, x.Scale), (x) => x.transfrom.Scale = x.Item2);
+
+        private void RecordAction(Action redoAction, string name)
+        {
+            if (_propertyChange)
+            {
+                Debug.Assert(_undoAction != null);
+                _propertyChange = false;
+                Project.UndoRedo.Add(new UndoRedoAction(_undoAction, redoAction, name));
+            }
         }
         private void OnPosition_VectorBox_Mouse_LBD(object sender, MouseButtonEventArgs e)
         {
             _propertyChange = false;
-            _undoAction = GetAction();
+            _undoAction = GetPositionAction();
         }
 
         private void OnPosition_VectorBox_Mouse_LBU(object sender, MouseButtonEventArgs e)
         {
-            if(_propertyChange)
-            {
-                Debug.Assert(_undoAction != null);
-                _propertyChange = false;
-                var redoAction = GetAction();
-                Project.UndoRedo.Add(new UndoRedoAction(_undoAction, redoAction, "Position Change"));
-            }
+            RecordAction(GetPositionAction(), "Position changed");
         }
 
         private void OnPosition_VectorBox_LostKeyboardFocus(object sender, KeyboardFocusChangedEventArgs e)
@@ -77,32 +84,41 @@ namespace PrimalEditor.Editors
 
         private void OnRotation_VectorBox_Mouse_LBD(object sender, MouseButtonEventArgs e)
         {
-
+            _propertyChange = false;
+            _undoAction = GetRotationAction();
         }
 
         private void OnRotation_VectorBox_Mouse_LBU(object sender, MouseButtonEventArgs e)
         {
-
+            RecordAction(GetRotationAction(), "Rotation changed");
         }
 
         private void OnRotation_VectorBox_LostKeyboardFocus(object sender, KeyboardFocusChangedEventArgs e)
         {
-
+            if (_propertyChange && _undoAction != null)
+            {
+                OnRotation_VectorBox_Mouse_LBU(sender, null);
+            }
         }
 
         private void OnScale_VectorBox_Mouse_LBD(object sender, MouseButtonEventArgs e)
         {
-
+            _propertyChange = false;
+            _undoAction = GetScaleAction();
         }
 
         private void OnScale_VectorBox_Mouse_LBU(object sender, MouseButtonEventArgs e)
         {
+            RecordAction(GetScaleAction(), "Scale changed");
 
         }
 
         private void OnScale_VectorBox_LostKeyboardFocus(object sender, KeyboardFocusChangedEventArgs e)
         {
-
+            if (_propertyChange && _undoAction != null)
+            {
+                OnScale_VectorBox_Mouse_LBU(sender, null);
+            }
         }
     }
 }

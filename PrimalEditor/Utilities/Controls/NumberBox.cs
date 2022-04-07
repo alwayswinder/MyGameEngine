@@ -52,9 +52,9 @@ namespace PrimalEditor.Utilities.Controls
             _captured = true;
             _valueChange = false;
             e.Handled = true;
-            _multiplier = 0.01;
 
             _mouseXStart = e.GetPosition(this).X;
+            Focus();
         }
         private void OnTextBock_Mouse_LBU(object sender, MouseButtonEventArgs e)
         {
