@@ -3,6 +3,8 @@
 
 #include "../Components/ComponentsCommon.h"
 #include "TransformComponent.h"
+#include "ScriptComponent.h"
+
 
 namespace primal
 {
@@ -19,6 +21,7 @@ namespace primal
 			constexpr bool is_valid()const { return id::is_valid(_id); }
 
 			transform::component transform()const;
+			script::component script()const;
 		private:
 			entity_id _id;
 		};
@@ -36,23 +39,18 @@ namespace primal
 				:game_entity::entity{entity}{}
 		};
 
-		class my_player_character :public entity_script
+		namespace detail
 		{
-		public:
-			void update(float dt)override
-			{
-				//
-			}
-		};
-		using script_ptr = std::unique_ptr<entity_script>;
-		using script_creator = script_ptr(*)(game_entity::entity entity);
+			using script_ptr = std::unique_ptr<entity_script>;
+			using script_creator = script_ptr(*)(game_entity::entity entity);
 
-		template<class script_class>
-		script_ptr create_script(game_entity::entity entity)
-		{
-			assert(entity.is_valid());
-			
-			return std::make_unique<script_ptr>(entity);
+			template<class script_class>
+			script_ptr create_script(game_entity::entity entity)
+			{
+				assert(entity.is_valid());
+
+				return std::make_unique<script_ptr>(entity);
+			}
 		}
 
 	}

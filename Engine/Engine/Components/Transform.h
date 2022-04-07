@@ -9,6 +9,6 @@ namespace primal::transform
 		f32 rotation[4]{};
 		f32 scale[3]{ 1.f,1.f,1.f };
 	};
-	component create_transfrom(const Init_info& info, game_entity::entity e);
-	void remove_transform(component c);
+	component create(Init_info info, game_entity::entity e);
+	void remove(component c);
 }

@@ -1,23 +1,33 @@
 #include "Entity.h"
 #include "Transform.h"
+#include "Script.h"
+
 
 namespace primal::game_entity
 {
 	namespace
 	{
 		utl::vector<transform::component>	 transforms;
+		utl::vector<script::component>	 scripts;
+
 		utl::vector<id::generation_type>	 generations;
 		utl::deque<entity_id>				 free_ids;
 	}
 
 	transform::component entity::transform() const
 	{
-		assert(is_alive(*this));
+		assert(is_alive(_id));
 		const id::id_type index{ id::index(_id) };
 		return transforms[index];
 	}
+	script::component entity::script()const
+	{
+		assert(is_alive(_id));
+		const id::id_type index{ id::index(_id) };
+		return scripts[index];
+	}
 
-	entity create_game_entity(const entity_info& info)
+	entity create(entity_info info)
 	{
 		assert(info.transform);
 		if (!info.transform) return entity{ };
@@ -26,7 +36,7 @@ namespace primal::game_entity
 		if (free_ids.size() > id::min_deleted_elements)
 		{
 			id = free_ids.front();
-			assert(!is_alive(entity{ id }));
+			assert(!is_alive(id));
 			free_ids.pop_front();
 			id = entity_id{ id::new_generation(id) };
 			++generations[id::index(id)];
@@ -37,35 +47,37 @@ namespace primal::game_entity
 			generations.push_back(0);
 			transforms.emplace_back();
 		}
-		const entity new_entity{ id };
+		const entity new_entity{    };
 		const id::id_type index{ id::index(id) };
 
 		//create transform component
-		transforms[index] = transform::create_transfrom(*info.transform, new_entity);
+		assert(!transforms[index].is_valid());
+		transforms[index] = transform::create(*info.transform, new_entity);
 		if (!transforms[index].is_valid())	return {};
 
-
+		//create script component
+		if (info.script && info.script->script_creator)
+		{
+			assert(!scripts[index].is_valid());
+			scripts[index] = script::create(*info.script, new_entity);
+			assert(scripts[index].is_valid());
+		}
 		return new_entity;
 	}
 
-	void remove_game_entity(entity e)
+	void remove(entity_id id)
 	{
-		const entity_id id{ e.get_id() };
 		const id::id_type index{ id::index(id) };
-		assert(is_alive(e));
-		if (is_alive(e))
-		{
-			transform::remove_transform(transforms[index]);
-			transforms[index] = {};
-			free_ids.push_back(id);
-		}
+		assert(is_alive(id));
 
+		transform::remove(transforms[index]);
+		transforms[index] = {};
+		free_ids.push_back(id);
 	}
 
-	bool is_alive(entity e)
+	bool is_alive(entity_id id)
 	{
-		assert(e.is_valid());
-		const entity_id id{ e.get_id() };
+		assert(id::is_valid(id));
 		const id::id_type index{ id::index(id) };
 		assert(index < generations.size());
 		assert(generations[index] == id::generation(id));
