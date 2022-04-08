@@ -11,6 +11,14 @@ namespace primal::script
 		utl::vector<id::generation_type>	generations;
 		utl::vector<script_id>				free_ids;
 
+		using script_registery = std::unordered_map<size_t, detail::script_creator>;
+		script_registery& registery()
+		{
+			//
+			static script_registery reg;
+			return reg;
+		}
+
 		bool exists(script_id id)
 		{
 			assert(id::is_valid(id));
@@ -20,6 +28,15 @@ namespace primal::script
 			return (generations[index] == id::generation(id)) &&
 				entity_scripts[id_mapping[index]] &&
 				entity_scripts[id_mapping[index]]->is_valid();
+		}
+	}
+	namespace detail
+	{
+		u8 register_script(size_t tag, script_creator func)
+		{
+			bool result{ registery().insert(script_registery::value_type{tag, func}).second };
+			assert(result);
+			return result;
 		}
 	}
 	component create(Init_info info, game_entity::entity entity)
