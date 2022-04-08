@@ -21,7 +21,7 @@
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
-    <ProjectGuid>{53F35E28-B5BC-4186-A7D8-854BCBD97EB9}</ProjectGuid>
+    <ProjectGuid>{0}</ProjectGuid>
     <RootNamespace>FirstGameProject</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>

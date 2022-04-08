@@ -58,7 +58,7 @@ namespace primal
 		class TYPE;													\
 		namespace													\
 		{															\
-			const u8 _reg##TYPE										\
+			const u8 _reg_##TYPE										\
 			{														\
 				primal::script::detail::register_script(			\
 					primal::script::detail::string_hash()(#TYPE),	\
