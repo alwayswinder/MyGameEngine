@@ -6,3 +6,7 @@
 */.vs/
 /x64/
 */obj/
+/EngineDLL/x64/
+/EngineTest/x64/
+UpgradeLog.htm
+Backup/Engine.sln

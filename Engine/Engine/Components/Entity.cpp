@@ -48,7 +48,7 @@ namespace primal::game_entity
 			transforms.emplace_back();
 			scripts.emplace_back();
 		}
-		const entity new_entity{    };
+		const entity new_entity{ id };
 		const id::id_type index{ id::index(id) };
 
 		//create transform component
