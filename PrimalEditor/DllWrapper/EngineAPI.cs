@@ -25,7 +25,7 @@ namespace PrimalEditor.DllWrapper
 {
     static class EngineAPI
     {
-        private const string _dllName = "EngineDll.dll";
+        private const string _dllName = "../EngineDLL\\EngineDLL.dll";
 
         [DllImport(_dllName)]
         private static extern int CreateGameEntity(GameEntityDescriptor desc);

@@ -22,13 +22,14 @@ namespace PrimalEditor
     /// </summary>
     public partial class MainWindow : Window
     {
+        public static string PrimalPath { get; private set; } = @"D:\MyGameEngine";
+
         public MainWindow()
         {
             InitializeComponent();
             Loaded += OnMainWindowLoaded;
             Closing += OnMainWindowClosing;
         }
-
         private void OnMainWindowClosing(object sender, CancelEventArgs e)
         {
             Closing -= OnMainWindowClosing;
