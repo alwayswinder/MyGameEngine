@@ -98,8 +98,8 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <OutDir>..\..\$(Platform)\$(Configuration)\</OutDir>
-    <IntDir>..\..\$(Platform)\$(Configuration)\tmp\</IntDir>
+    <OutDir>..\..\$(Platform)\$(Configuration)\Engine\</OutDir>
+    <IntDir>..\..\$(Platform)\$(Configuration)\EngineTmp\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
