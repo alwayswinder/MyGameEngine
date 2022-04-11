@@ -80,8 +80,8 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
     <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);</IncludePath>
-    <OutDir>..\..\$(Platform)\$(Configuration)\EngineTest\</OutDir>
-    <IntDir>..\..\$(Platform)\$(Configuration)\EngineTestTmp\</IntDir>
+    <OutDir>..\$(Platform)\$(Configuration)\EngineTest\</OutDir>
+    <IntDir>..\$(Platform)\$(Configuration)\EngineTestTmp\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
