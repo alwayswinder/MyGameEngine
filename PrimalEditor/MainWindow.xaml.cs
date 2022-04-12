@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -13,7 +14,6 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace PrimalEditor
 {
@@ -39,7 +39,26 @@ namespace PrimalEditor
         private void OnMainWindowLoaded(object sender, RoutedEventArgs e)
         {
             Loaded -= OnMainWindowLoaded;
+            GetEnginePath();
             OpenProjectBrowserDialog();
+        }
+
+        private void GetEnginePath()
+        {
+            var myGameEnginePath = Environment.GetEnvironmentVariable("MYGAME_ENGINE", EnvironmentVariableTarget.User);
+            if (myGameEnginePath == null || !Directory.Exists(Path.Combine(myGameEnginePath, @"Engine\Engine\EngineAPI")))
+            {
+                var dlg = new EnginePathDialog();
+                if(dlg.ShowDialog() == true)
+                {
+                    MyGameEnginePath = dlg.MyGameEnginePath;
+                    Environment.SetEnvironmentVariable("MYGAME_ENGINE", MyGameEnginePath.ToUpper(), EnvironmentVariableTarget.User);
+                }
+            }
+            else
+            {
+                MyGameEnginePath = myGameEnginePath;
+            }
         }
 
 

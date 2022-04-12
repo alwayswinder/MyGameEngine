@@ -24,6 +24,9 @@
     <Compile Update="Editors\WorldEditor\WorldEditorView.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Update="EnginePathDialog.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Update="GameProject\CreateProjectView.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -60,6 +63,9 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Update="Editors\WorldEditor\WorldEditorView.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="EnginePathDialog.xaml">
       <SubType>Designer</SubType>
     </Page>
     <Page Update="GameProject\CreateProjectView.xaml">
