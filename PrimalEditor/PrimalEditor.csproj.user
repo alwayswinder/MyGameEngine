@@ -27,6 +27,9 @@
     <Compile Update="EnginePathDialog.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Update="GameDev\NewScriptDialog.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Update="GameProject\CreateProjectView.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -66,6 +69,9 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Update="EnginePathDialog.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="GameDev\NewScriptDialog.xaml">
       <SubType>Designer</SubType>
     </Page>
     <Page Update="GameProject\CreateProjectView.xaml">

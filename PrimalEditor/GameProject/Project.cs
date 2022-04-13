@@ -22,6 +22,7 @@ namespace PrimalEditor.GameProject
         public static string Extension { get; } = ".primal";
         public string FullPath => $"{Path}{Name}{Extension}";
 
+        public string Solution => $@"{Path}{Name}.sln";
         [DataMember(Name = "Scenes")]
         private ObservableCollection<Scene> _scenes = new ObservableCollection<Scene>();
         public ReadOnlyObservableCollection<Scene> Scenes
