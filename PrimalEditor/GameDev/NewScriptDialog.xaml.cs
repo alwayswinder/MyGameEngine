@@ -74,7 +74,7 @@ namespace {1}
             {
                 errorMsg = "Select a valid script folder.";
             }
-            else if (path.IndexOfAny(Path.GetInvalidFileNameChars()) != -1)
+            else if (path.IndexOfAny(Path.GetInvalidPathChars()) != -1)
             {
                 errorMsg = "Invalid character(s) used in script path.";
             }
@@ -93,7 +93,7 @@ namespace {1}
             }
             if(!isValid)
             {
-                messageTextBlock.Foreground = FindResource("Editor.Redbrush") as Brush;
+                messageTextBlock.Foreground = FindResource("Editor.RedBrush") as Brush;
             }
             else
             {

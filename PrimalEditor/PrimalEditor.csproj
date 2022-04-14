@@ -35,7 +35,7 @@
       <Guid>80cc9f66-e7d8-4ddd-85b6-d9e6cd0e93e2</Guid>
       <Lcid>0</Lcid>
       <Isolated>false</Isolated>
-      <EmbedInteropTypes>true</EmbedInteropTypes>
+      <EmbedInteropTypes>false</EmbedInteropTypes>
     </COMReference>
   </ItemGroup>
 

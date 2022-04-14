@@ -76,7 +76,7 @@ namespace PrimalEditor.Editors
 
         private void OnPosition_VectorBox_LostKeyboardFocus(object sender, KeyboardFocusChangedEventArgs e)
         {
-            if(_propertyChange && _undoAction != null)
+            if (_propertyChange && _undoAction != null)
             {
                 OnPosition_VectorBox_Mouse_LBU(sender, null);
             }
@@ -120,5 +120,7 @@ namespace PrimalEditor.Editors
                 OnScale_VectorBox_Mouse_LBU(sender, null);
             }
         }
+
+
     }
 }

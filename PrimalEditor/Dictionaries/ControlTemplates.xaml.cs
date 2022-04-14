@@ -93,6 +93,10 @@ namespace PrimalEditor.Dictionaries
             var window = (Window)((FrameworkElement)sender).TemplatedParent;
             window.WindowState = WindowState.Minimized;
         }
-  
+
+        private void PART_textBlock_DataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
+        {
+
+        }
     }
 }

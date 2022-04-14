@@ -431,7 +431,7 @@
                 <ControlTemplate TargetType="{x:Type utl:NumberBox}">
                     <Grid>
                         <TextBlock x:Name="PART_textBlock"
-                                   Text="{Binding Value,RelativeSource={RelativeSource TemplatedParent}}"
+                                   Text="{Binding Value,RelativeSource={RelativeSource TemplatedParent}, UpdateSourceTrigger=PropertyChanged}"
                                    HorizontalAlignment="Center">
                             <TextBlock.Style>
                                 <Style TargetType="{x:Type TextBlock}">
@@ -553,7 +553,7 @@
                                 <RowDefinition x:Name="RowDefinition2"/>
                                 <RowDefinition x:Name="RowDefinition3"/>
                             </Grid.RowDefinitions>
-                            <utl:NumberBox x:Name="nbX" Foreground="{StaticResource Editor.RedBrush}" Value="{Binding X,RelativeSource={RelativeSource TemplatedParent}}" 
+                            <utl:NumberBox x:Name="nbX" Foreground="{StaticResource Editor.RedBrush}" Value="{Binding X,RelativeSource={RelativeSource TemplatedParent}}"
                                 ToolTip="X value"/>
                             <utl:NumberBox x:Name="nbY" Foreground="{StaticResource Editor.GreenBrush}" Value="{Binding Y,RelativeSource={RelativeSource TemplatedParent}}" 
                                 ToolTip="Y value"/>

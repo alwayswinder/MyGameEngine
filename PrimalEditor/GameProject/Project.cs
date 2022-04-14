@@ -1,4 +1,5 @@
-﻿using PrimalEditor.Utilities;
+﻿using PrimalEditor.GameDev;
+using PrimalEditor.Utilities;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -66,6 +67,7 @@ namespace PrimalEditor.GameProject
         }
         public void Unload()
         {
+            VisualStudio.CloseVisualStudio();
             UndoRedo.Reset();
         }
         public static void Save(Project project)

@@ -40,8 +40,8 @@ namespace PrimalEditor.Utilities.Controls
             if(GetTemplateChild("PART_textBlock") is TextBlock textBlock)
             {
                 textBlock.MouseLeftButtonDown += OnTextBock_Mouse_LBD;
-                textBlock.MouseLeftButtonUp += OnTextBock_Mouse_LBU;
-                textBlock.MouseMove += OnTextBock_Mouse_Move;
+               // textBlock.MouseLeftButtonUp += OnTextBock_Mouse_LBU;
+                //textBlock.MouseMove += OnTextBock_Mouse_Move;
             }
 
         }
