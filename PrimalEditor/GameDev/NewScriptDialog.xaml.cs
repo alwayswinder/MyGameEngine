@@ -13,6 +13,7 @@ using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
+using System.Windows.Media.Animation;
 using System.Windows.Media.Imaging;
 
 namespace PrimalEditor.GameDev
@@ -118,6 +119,10 @@ namespace {1}
         {
             if (!Validate()) return;
             IsEnabled = false;
+            busyAnimation.Opacity = 0;
+            busyAnimation.Visibility = Visibility.Visible;
+            DoubleAnimation fadeIn = new DoubleAnimation(0, 1, new Duration(TimeSpan.FromMilliseconds(500)));
+            busyAnimation.BeginAnimation(OpacityProperty, fadeIn);
             try
             {
                 var name = scriptName.Text.Trim();
@@ -131,6 +136,17 @@ namespace {1}
             {
                 Debug.WriteLine(ex.Message);
                 Logger.Log(MessageType.Error, $"Failed to create script {scriptName.Text}");
+            }
+            finally
+            {
+                DoubleAnimation fadeOut = new DoubleAnimation(1, 0, new Duration(TimeSpan.FromMilliseconds(200)));
+                fadeOut.Completed += (s, e) =>
+                {
+                    busyAnimation.Opacity = 0;
+                    busyAnimation.Visibility = Visibility.Hidden;
+                    Close();
+                };
+                busyAnimation.BeginAnimation(OpacityProperty, fadeOut);
             }
         }
         private void CreateScript(string name, string path, string solution, string projectName)
