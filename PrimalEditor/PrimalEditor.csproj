@@ -13,22 +13,23 @@
     <OutputPath>..\x64\Debug\PrimalEditor\</OutputPath>
     <PlatformTarget>x64</PlatformTarget>
     <GenerateSerializationAssemblies>Auto</GenerateSerializationAssemblies>
+    <DocumentationFile></DocumentationFile>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DebugEditor|x64'">
-    <OutputPath>..\x64\Debug\PrimalEditor\</OutputPath>
+    <OutputPath>..\x64\DebugEditor\PrimalEditor\</OutputPath>
     <PlatformTarget>x64</PlatformTarget>
     <GenerateSerializationAssemblies>Auto</GenerateSerializationAssemblies>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <PlatformTarget>x64</PlatformTarget>
-    <OutputPath>..\x64\</OutputPath>
+    <OutputPath>..\x64\Release\PrimalEditor\</OutputPath>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseEditor|x64'">
     <PlatformTarget>x64</PlatformTarget>
-    <OutputPath>..\x64\</OutputPath>
+    <OutputPath>..\x64\ReleaseEditor\PrimalEditor\</OutputPath>
   </PropertyGroup>
 
   <ItemGroup>
