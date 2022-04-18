@@ -1,4 +1,5 @@
-﻿using PrimalEditor.GameDev;
+﻿using PrimalEditor.DllWrapper;
+using PrimalEditor.GameDev;
 using PrimalEditor.Utilities;
 using System;
 using System.Collections.Generic;
@@ -120,7 +121,16 @@ namespace PrimalEditor.GameProject
         }
         private void UnloadGameCodeDll()
         {
-
+            var configName = GetConfigurationName(DllBuildConfig);
+            var dll = $@"{Path}x64\{configName}\Engine\{Name}.dll";
+            if(File.Exists(dll) && EngineAPI.LoadGameCodeDll(dll) != 0)
+            {
+                Logger.Log(MessageType.Info, "Game code DLL loaded successful.");
+            }
+            else
+            {
+                Logger.Log(MessageType.Warning, "Failed to load game code DLL file, Try to build the project first.");
+            }
         }
         private void LoadGameCodeDll()
         {

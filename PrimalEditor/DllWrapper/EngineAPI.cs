@@ -25,30 +25,36 @@ namespace PrimalEditor.DllWrapper
 {
     static class EngineAPI
     {
-        private const string _dllName = "../EngineDLL\\EngineDLL.dll";
-
-        [DllImport(_dllName)]
-        private static extern int CreateGameEntity(GameEntityDescriptor desc);
-
-        public static int CreateGameEntity(GameEntity entity)
+        private const string _engineDll = "../EngineDLL/EngineDLL.dll";
+        [DllImport(_engineDll, CharSet = CharSet.Ansi)]
+        public static extern int LoadGameCodeDll(string dllPath);
+        [DllImport(_engineDll)]
+        public static extern int UnLoadGameCodeDll();
+        internal static class EntityAPI
         {
-            GameEntityDescriptor desc = new GameEntityDescriptor();
+            [DllImport(_engineDll)]
+            private static extern int CreateGameEntity(GameEntityDescriptor desc);
 
-            //Transform
+            public static int CreateGameEntity(GameEntity entity)
             {
-                var c = entity.GetComponent<Transform>();
-                desc.Transform.Position = c.Position;
-                desc.Transform.Rotation = c.Rotation;
-                desc.Transform.Scale = c.Scale;
-            }
+                GameEntityDescriptor desc = new GameEntityDescriptor();
 
-            return CreateGameEntity(desc);
-        }
-        [DllImport(_dllName)]
-        private static extern void RemoveGameEntity(int id);
-        public static void RemoveGameEntity(GameEntity entity)
-        {
-            RemoveGameEntity(entity.EntityId);
+                //Transform
+                {
+                    var c = entity.GetComponent<Transform>();
+                    desc.Transform.Position = c.Position;
+                    desc.Transform.Rotation = c.Rotation;
+                    desc.Transform.Scale = c.Scale;
+                }
+
+                return CreateGameEntity(desc);
+            }
+            [DllImport(_engineDll)]
+            private static extern void RemoveGameEntity(int id);
+            public static void RemoveGameEntity(GameEntity entity)
+            {
+                RemoveGameEntity(entity.EntityId);
+            }
         }
     }
 }
