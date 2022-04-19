@@ -16,8 +16,10 @@
     
     <UserControl.InputBindings>
         <KeyBinding Command="{Binding UndoCommand}" Key="Z" Modifiers="Ctrl"/>
-        <KeyBinding Command="{Binding RedoCommand}" Key="X" Modifiers="Ctrl"/>
+        <KeyBinding Command="{Binding RedoCommand}" Key="Z" Modifiers="Ctrl+Shift"/>
         <KeyBinding Command="{Binding SaveCommand}" Key="S" Modifiers="Ctrl"/>
+        <KeyBinding Command="{Binding BuildCommand}" CommandParameter="{StaticResource True}" 
+                    Key="B" Modifiers="Ctrl"/>
     </UserControl.InputBindings>
     <Grid>
         <Grid.RowDefinitions>
@@ -27,14 +29,14 @@
         <StackPanel Orientation="Horizontal">
             <Button Content="Undo" Command="{Binding UndoCommand}"/>
             <Button Content="Redo" Command="{Binding RedoCommand}" Margin="5,0"/>
-            <Button Content="New Script" Click="OnNewScript_Button_Click"/>
+            <Button Content="New Script" Click="OnNewScript_Button_Click"
+                    IsEnabled="{Binding Path=IsEnabled, ElementName=buildButton}"/>
             <Button x:Name="buildButton" Content="Build" Margin="5,0" Command="{Binding BuildCommand}"
                     CommandParameter="{StaticResource True}"/>
             <ComboBox x:Name="runConfig" VerticalAlignment="Center" Width="72" SelectedIndex="{Binding BuildConfig}">
                 <ComboBoxItem Content="Debug"/>
                 <ComboBoxItem Content="Release"/>
             </ComboBox>
-
         </StackPanel>
         <Grid Grid.Row="1">
             <Grid.ColumnDefinitions>
@@ -72,8 +74,9 @@
                     <utl:LoggerView Grid.Column="1" Margin="5,0,0,0"/>
                 </Grid>
             </Grid>
-            <GridSplitter Grid.Column="1" Width="5" HorizontalAlignment="Left" VerticalAlignment="Stretch"/>
-            <Grid Grid.Column="1">
+            <GridSplitter Grid.Column="1" Width="5" HorizontalAlignment="Left" VerticalAlignment="Stretch"
+                          Background="Transparent"/>
+            <Grid Grid.Column="2">
                 <Grid.RowDefinitions>
                     <RowDefinition/>
                     <RowDefinition/>

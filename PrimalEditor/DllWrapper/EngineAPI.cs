@@ -29,7 +29,7 @@ namespace PrimalEditor.DllWrapper
         [DllImport(_engineDll, CharSet = CharSet.Ansi)]
         public static extern int LoadGameCodeDll(string dllPath);
         [DllImport(_engineDll)]
-        public static extern int UnLoadGameCodeDll();
+        public static extern int UnloadGameCodeDll();
         internal static class EntityAPI
         {
             [DllImport(_engineDll)]

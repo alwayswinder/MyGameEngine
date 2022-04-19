@@ -22,7 +22,7 @@ namespace PrimalEditor
     /// </summary>
     public partial class MainWindow : Window
     {
-        public static string MyGameEnginePath { get; private set; } = @"D:\MyGameEngine";
+        public static string MyGameEnginePath { get; private set; }
 
         public MainWindow()
         {

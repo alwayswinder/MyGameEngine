@@ -23,7 +23,7 @@ EDITOR_INTERFACE u32 LoadGameCodeDll(const char* dll_path)
 	return game_code_dll ? TRUE : FALSE;
 }
 
-EDITOR_INTERFACE u32 UnloadGameCodeDll(const char* dll_path)
+EDITOR_INTERFACE u32 UnloadGameCodeDll()
 {
 	if (!game_code_dll) return FALSE;
 	assert(game_code_dll);
