@@ -72,6 +72,7 @@
   <PropertyGroup Label="UserMacros" >
 	<Primal_IncludePath>{2}</Primal_IncludePath>
 	<Primal_LibraryPath>{3}\$(Platform)\$(Configuration)\Engine\</Primal_LibraryPath>
+	<Primal_ThridPath>{3}Third\</Primal_ThridPath>
   </PropertyGroup>
   <ItemGroup>
 	<BuildMacro Include="Primal_IncludePath">
@@ -79,6 +80,9 @@
 	</BuildMacro>
 	<BuildMacro Include="Primal_LibraryPath">
 		<Value>$(Primal_LibraryPath)</Value>
+	</BuildMacro>
+	<BuildMacro Include="Primal_ThridPath">
+		<Value>$(Primal_ThridPath)</Value>
 	</BuildMacro>
   </ItemGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -110,7 +114,7 @@
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(Primal_LibraryPath)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(Primal_LibraryPath);$(Primal_ThridPath)</AdditionalLibraryDirectories>
       <AdditionalDependencies>Engine.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <ProgramDatabaseFile>$(OutDir)$(TargetName)-$([System.DateTime]::Now.ToString("HH_mm_ss_fff")).pdb</ProgramDatabaseFile>
     </Link>
@@ -128,7 +132,7 @@
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(Primal_LibraryPath)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(Primal_LibraryPath);$(Primal_ThridPath)</AdditionalLibraryDirectories>
       <AdditionalDependencies>Engine.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <ProgramDatabaseFile>$(OutDir)$(TargetName)-$([System.DateTime]::Now.ToString("HH_mm_ss_fff")).pdb</ProgramDatabaseFile>
     </Link>
@@ -150,7 +154,7 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(Primal_LibraryPath)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(Primal_LibraryPath);$(Primal_ThridPath)</AdditionalLibraryDirectories>
       <AdditionalDependencies>Engine.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <ProgramDatabaseFile>$(OutDir)$(TargetName)-$([System.DateTime]::Now.ToString("HH_mm_ss_fff")).pdb</ProgramDatabaseFile>
     </Link>
@@ -172,7 +176,7 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(Primal_LibraryPath)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(Primal_LibraryPath);$(Primal_ThridPath)</AdditionalLibraryDirectories>
       <AdditionalDependencies>Engine.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <ProgramDatabaseFile>$(OutDir)$(TargetName)-$([System.DateTime]::Now.ToString("HH_mm_ss_fff")).pdb</ProgramDatabaseFile>
     </Link>

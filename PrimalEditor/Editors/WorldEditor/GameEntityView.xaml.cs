@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
 using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Input;
@@ -90,5 +91,52 @@ namespace PrimalEditor.Editors
             Project.UndoRedo.Add(new UndoRedoAction(undoAction, redoAction,
                 vm.IsEnabled == true ? "Enable game entity" : "Disable game entity"));
         }
+
+        private void OnAddComponent_Button_PreviewMouse_LBD(object sender, MouseButtonEventArgs e)
+        {
+            var menu = FindResource("addComponentMenu") as ContextMenu;
+            var btn = sender as ToggleButton;
+            btn.IsChecked = true;
+            menu.Placement = PlacementMode.Bottom;
+            menu.PlacementTarget = btn;
+            menu.MinWidth = btn.ActualWidth;
+            menu.IsOpen = true;
+        }
+        private void AddComponent(ComponentType componentType, object data)
+        {
+            var creationFunction = ComponentFactory.GetCreateionFunction(componentType);
+            var changedEntities = new List<(GameEntity entity, Component component)>();
+            var vm = DataContext as MSEntity;
+            foreach(var entity in vm.SelectedEntities)
+            {
+                var component = creationFunction(entity, data);
+                if(entity.AddComponent(component))
+                {
+                    changedEntities.Add((entity, component));
+                }
+            }
+            if(changedEntities.Any())
+            {
+                vm.Refresh();
+
+                Project.UndoRedo.Add(new UndoRedoAction(
+                    ()=>
+                    {
+                        changedEntities.ForEach(x => x.entity.RemoveComponent(x.component));
+                        (DataContext as MSEntity).Refresh();
+                    },
+                    ()=>
+                    {
+                        changedEntities.ForEach(x => x.entity.AddComponent(x.component));
+                        (DataContext as MSEntity).Refresh();
+                    },
+                    $"Add {componentType} component"));
+            }
+        }
+        private void OnAddScriptComponent(object sender, RoutedEventArgs e)
+        {
+            AddComponent(ComponentType.Script, (sender as MenuItem).Header.ToString());
+        }
+
     }
 }

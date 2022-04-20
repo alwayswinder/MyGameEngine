@@ -73,7 +73,7 @@ namespace primal
 			const u8 _name_##TYPE									\
 			{														\
 				primal::script::detail::add_script_name(#TYPE)		\
-			}														\
+			};														\
 		}
 #else
 #define REGIESTER_SCRIPT(TYPE)										\

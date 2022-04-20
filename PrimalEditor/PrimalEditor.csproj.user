@@ -18,6 +18,9 @@
     <Compile Update="Editors\WorldEditor\ProjectLayoutView.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Update="Editors\WorldEditor\ScriptView.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Update="Editors\WorldEditor\TransformView.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -60,6 +63,9 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Update="Editors\WorldEditor\ProjectLayoutView.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Editors\WorldEditor\ScriptView.xaml">
       <SubType>Designer</SubType>
     </Page>
     <Page Update="Editors\WorldEditor\TransformView.xaml">
