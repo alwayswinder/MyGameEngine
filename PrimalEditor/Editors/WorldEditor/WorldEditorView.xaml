@@ -13,10 +13,10 @@
         <sys:Boolean x:Key="True">True</sys:Boolean>
         <sys:Boolean x:Key="False">False</sys:Boolean>
     </UserControl.Resources>
-    
+
     <UserControl.InputBindings>
         <KeyBinding Command="{Binding UndoCommand}" Key="Z" Modifiers="Ctrl"/>
-        <KeyBinding Command="{Binding RedoCommand}" Key="Z" Modifiers="Ctrl+Shift"/>
+        <KeyBinding Command="{Binding RedoCommand}" Key="x" Modifiers="Ctrl"/>
         <KeyBinding Command="{Binding SaveCommand}" Key="S" Modifiers="Ctrl"/>
         <KeyBinding Command="{Binding BuildCommand}" CommandParameter="{StaticResource True}" 
                     Key="B" Modifiers="Ctrl"/>
@@ -40,10 +40,11 @@
         </StackPanel>
         <Grid Grid.Row="1">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition/>
-                <ColumnDefinition/>
+                <ColumnDefinition Width="14*"/>
+                <ColumnDefinition Width="481*"/>
+                <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
-            <Grid Grid.Column="0">
+            <Grid Grid.Column="0" Grid.ColumnSpan="2">
                 <Grid.RowDefinitions>
                     <RowDefinition/>
                     <RowDefinition/>
@@ -51,32 +52,26 @@
                 <Border Background="{StaticResource Editor.Selected.BackgroundBrush}">
                     <StackPanel VerticalAlignment="Center">
                         <ctlr:NumberBox Value="0" Foreground="{StaticResource Editor.FontBrush}"/>
-                        <ctlr:ScalarBox Value="10" Multiplier="10"/>    
-                        <!--<ctlr:VectorBox X="0" Y="1" Z="2" W="3" VectorType="Vector2"/>
-                        <ctlr:VectorBox X="0" Y="1" Z="2" W="3" VectorType="Vector3"/>
-                        <ctlr:VectorBox X="0" Y="1" Z="2" W="3" VectorType="Vector4"/>
-                        <ctlr:VectorBox X="0" Y="1" Z="2" W="3" VectorType="Vector2" Orientation="Vertical"/>
-                        <ctlr:VectorBox X="0" Y="1" Z="2" W="3" VectorType="Vector3" Orientation="Vertical"/>
-                        <ctlr:VectorBox X="0" Y="1" Z="2" W="3" VectorType="Vector4" Orientation="Vertical"/>-->
+                        <ctlr:ScalarBox Value="10" Multiplier="10"/>
                     </StackPanel>
                 </Border>
                 <GridSplitter Grid.Row="1" Height="5" HorizontalAlignment="Stretch" VerticalAlignment="Top"
                               Background="Transparent"/>
                 <Grid Grid.Row="1" Margin="0,5,0,0">
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition/>
+                        <ColumnDefinition Width="200"/>
                         <ColumnDefinition/>
                     </Grid.ColumnDefinitions>
                     <utl:UndoRedoView DataContext="{Binding UndoRedo}" Grid.Column="0"
                                       Background="{StaticResource Editor.Window.GrayBrush2}"/>
                     <GridSplitter Grid.Column="1" Width="5" VerticalAlignment="Stretch"
-                                  HorizontalAlignment="Left" Background="Transparent"/> 
+                                  HorizontalAlignment="Left" Background="Transparent"/>
                     <utl:LoggerView Grid.Column="1" Margin="5,0,0,0"/>
                 </Grid>
             </Grid>
-            <GridSplitter Grid.Column="1" Width="5" HorizontalAlignment="Left" VerticalAlignment="Stretch"
+            <GridSplitter Grid.Column="2" Width="5" HorizontalAlignment="Left"
                           Background="Transparent"/>
-            <Grid Grid.Column="2">
+            <Grid Grid.Column="2" Margin="5,0,0,0" MinWidth="300">
                 <Grid.RowDefinitions>
                     <RowDefinition/>
                     <RowDefinition/>

@@ -4,7 +4,7 @@
 #include "Engine/Common/id.h"
 #include "Engine/Components/Entity.h"
 #include "Engine/Components/Transform.h"
-
+#include "Engine/Components/Script.h"
 
 using namespace primal;
 
@@ -29,11 +29,20 @@ namespace
 			return info;
 		}
 	};
-
+	struct script_component
+	{
+		script::detail::script_creator script_creator;
+		script::Init_info to_init_info()
+		{
+			script::Init_info info{};
+			info.script_creator = script_creator;
+			return info;
+		}
+	};
 	struct game_entity_descriptor
 	{
 		transform_component transfrom;
-
+		script_component script;
 	};
 	game_entity::entity entity_from_id(id::id_type id)
 	{
@@ -47,7 +56,13 @@ id::id_type CreateGameEntity(game_entity_descriptor* e)
 	assert(e);
 	game_entity_descriptor& desc{ *e };
 	transform::Init_info transform_info{ desc.transfrom.to_init_info() };
-	game_entity::entity_info entity_info{ &transform_info, };
+	script::Init_info script_info{ desc.script.to_init_info() };
+
+	game_entity::entity_info entity_info
+	{
+		&transform_info, 
+		&script_info,
+	};
 
 	return game_entity::create(entity_info).get_id();
 }

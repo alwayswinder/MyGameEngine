@@ -1,4 +1,5 @@
-﻿using PrimalEditor.DllWrapper;
+﻿using PrimalEditor.Components;
+using PrimalEditor.DllWrapper;
 using PrimalEditor.GameDev;
 using PrimalEditor.Utilities;
 using System;
@@ -145,6 +146,7 @@ namespace PrimalEditor.GameProject
         }
         public void Unload()
         {
+            UnloadGameCodeDll();
             VisualStudio.CloseVisualStudio();
             UndoRedo.Reset();
         }
@@ -178,6 +180,7 @@ namespace PrimalEditor.GameProject
             if (File.Exists(dll) && EngineAPI.LoadGameCodeDll(dll) != 0)
             {
                 AvailableScripts = EngineAPI.GetScriptNames();
+                ActiveScene.GameEntities.Where(x => x.GetComponent<Script>() != null).ToList().ForEach(x => x.IsActive = true);
                 Logger.Log(MessageType.Info, "Game code DLL loaded successful.");
             }
             else
@@ -187,6 +190,7 @@ namespace PrimalEditor.GameProject
         }
         private void UnloadGameCodeDll()
         {
+            ActiveScene.GameEntities.Where(x => x.GetComponent<Script>() != null).ToList().ForEach(x => x.IsActive = false);
             if(EngineAPI.UnloadGameCodeDll()!=0)
             {
                 Logger.Log(MessageType.Info, "Game code DLL unloaded.");
@@ -203,6 +207,7 @@ namespace PrimalEditor.GameProject
                 OnPropertyChanged(nameof(Scenes));
             }
             ActiveScene = Scenes.FirstOrDefault(x => x.IsActive);
+            Debug.Assert(ActiveScene != null);
 
             await BuildGameCodeDll(false);
 

@@ -1,10 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Numerics;
 using System.Runtime.InteropServices;
 using System.Text;
 using PrimalEditor.Components;
 using PrimalEditor.EngineAPIStructs;
+using PrimalEditor.GameProject;
+using PrimalEditor.Utilities;
 
 namespace PrimalEditor.EngineAPIStructs
 {
@@ -66,7 +69,19 @@ namespace PrimalEditor.DllWrapper
                 }
 
                 {
-                    //var c = entity.GetComponent<Script>();
+                    var c = entity.GetComponent<Script>();
+                    if(c!=null && Project.Current != null)
+                    {
+                        if(Project.Current.AvailableScripts.Contains(c.Name))
+                        {
+                            desc.Script.ScriptCreator = GetScriptCreator(c.Name);
+                        }
+                        else
+                        {
+                            Logger.Log(MessageType.Error, 
+                                $"Unable to find script with name {c.Name}, Game entity will be created without script component!");
+                        }
+                    }
                 }
                 return CreateGameEntity(desc);
             }
