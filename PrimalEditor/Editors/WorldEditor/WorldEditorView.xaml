@@ -18,6 +18,11 @@
         <KeyBinding Command="{Binding UndoCommand}" Key="Z" Modifiers="Ctrl"/>
         <KeyBinding Command="{Binding RedoCommand}" Key="x" Modifiers="Ctrl"/>
         <KeyBinding Command="{Binding SaveCommand}" Key="S" Modifiers="Ctrl"/>
+        <KeyBinding Command="{Binding DebugStartCommand}" Key="P" Modifiers="Ctrl"/>
+        <KeyBinding Command="{Binding DebugStartWithoutDebuggingCommand}"
+                    Key="P" Modifiers="Ctrl+Alt"/>
+        <KeyBinding Command="{Binding DebugStopCommand}" Key="Esc"/>
+        
         <KeyBinding Command="{Binding BuildCommand}" CommandParameter="{StaticResource True}" 
                     Key="B" Modifiers="Ctrl"/>
     </UserControl.InputBindings>
