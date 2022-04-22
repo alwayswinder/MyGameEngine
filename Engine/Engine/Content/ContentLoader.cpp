@@ -5,6 +5,9 @@
 
 #if !defined(SHIPPING)
 #include <fstream>
+#include <filesystem>
+#include <Windows.h>
+
 
 namespace primal::content 
 {
@@ -56,6 +59,7 @@ namespace primal::content
 
 			script_name[name_length] = 0;
 			script_info.script_creator = script::detail::get_script_creator(script::detail::string_hash()(script_name));
+			info.script = &script_info;
 
 			return script_info.script_creator != nullptr;
 ;		}
@@ -69,6 +73,13 @@ namespace primal::content
 	}
 	bool load_game()
 	{
+		wchar_t path[MAX_PATH];
+		const u32 length{ GetModuleFileName(0, &path[0], MAX_PATH) };
+		if (!length || GetLastError() == ERROR_INSUFFICIENT_BUFFER) return false;
+		std::filesystem::path p{ path };
+		SetCurrentDirectory(p.parent_path().wstring().c_str());
+
+
 		std::ifstream game("game.bin", std::ios::in | std::ios::binary);
 		utl::vector<u8> buffer(std::istreambuf_iterator<char>(game), {});
 		assert(buffer.size());
