@@ -9,4 +9,5 @@ namespace primal::script
 	};
 	component create(Init_info info, game_entity::entity e);
 	void remove(component c);
+	void update(float dt);
 }
