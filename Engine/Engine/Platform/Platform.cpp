@@ -62,6 +62,26 @@ namespace primal::platform
 			case WM_DESTROY:
 				get_from_handle(hwnd).is_closed = true;
 				break;
+			case WM_EXITSIZEMOVE:
+				info = &get_from_handle(hwnd);
+				break;
+			case WM_SIZE:
+				if (wparam == SIZE_MAXIMIZED)
+				{
+					info = &get_from_handle(hwnd);
+				}
+				break;
+			case WM_SYSCOMMAND:
+				if (wparam == SC_RESTORE)
+				{
+					info = &get_from_handle(hwnd);
+				}
+				break;
+			}
+			if (info)
+			{
+				assert(info->hwnd);
+				GetClientRect(info->hwnd, info->is_fullscreen ? &info->fullscreen_area : &info->client_area);
 			}
 
 			LONG_PTR long_ptr{ GetWindowLongPtr(hwnd, 0) };
@@ -193,6 +213,7 @@ namespace primal::platform
 
 		if (info.hwnd)
 		{
+			SetLastError(0);
 			const window_id id{ add_to_windows(info) };
 			SetWindowLongPtr(info.hwnd, GWLP_USERDATA, (LONG_PTR)id);
 

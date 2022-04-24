@@ -1,5 +1,5 @@
 #pragma once
-#include "CommonHeaders.h"
+#include "../Common/CommonHeaders.h"
 #include "Window.h"
 
 namespace primal::platform
