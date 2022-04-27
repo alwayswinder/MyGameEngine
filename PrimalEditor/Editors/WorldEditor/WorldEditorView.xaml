@@ -76,7 +76,7 @@
                     <utl:LoggerView Grid.Column="1" Margin="5,0,0,0"/>
                 </Grid>
             </Grid>
-            <GridSplitter Grid.Column="1" Width="5" HorizontalAlignment="Left"
+            <GridSplitter Grid.Column="2" Width="5" HorizontalAlignment="Left"
                           VerticalAlignment="Stretch"
                           Background="Transparent"/>
             <Grid Grid.Column="2" Margin="5,0,0,0" MinWidth="300">
