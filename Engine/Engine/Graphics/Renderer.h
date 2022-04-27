@@ -10,6 +10,5 @@ namespace primal::graphics
 	{
 		platform::window window{};
 		surface surface{};
-
 	};
 }

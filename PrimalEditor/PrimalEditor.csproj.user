@@ -45,6 +45,9 @@
     <Compile Update="Utilities\LoggerView.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Update="Utilities\RenderSurface\RenderSurfaceView.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Update="Utilities\UndoRedoView.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -93,6 +96,9 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Update="Utilities\LoggerView.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Utilities\RenderSurface\RenderSurfaceView.xaml">
       <SubType>Designer</SubType>
     </Page>
     <Page Update="Utilities\UndoRedoView.xaml">

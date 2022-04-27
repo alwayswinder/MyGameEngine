@@ -61,6 +61,7 @@ void engine_update()
 
 void engine_shutdown()
 {
+	platform::remove_window(game_window.window.get_id());
 	primal::content::unload_game();
 }
 
