@@ -38,35 +38,45 @@
                     IsEnabled="{Binding Path=IsEnabled, ElementName=buildButton}"/>
             <Button x:Name="buildButton" Content="Build" Margin="5,0" Command="{Binding BuildCommand}"
                     CommandParameter="{StaticResource True}"/>
-            <ComboBox x:Name="runConfig" VerticalAlignment="Center" Width="72" SelectedIndex="{Binding BuildConfig}">
+            <ComboBox x:Name="runConfig" VerticalAlignment="Center" Width="72" 
+                      SelectedIndex="{Binding BuildConfig}">
                 <ComboBoxItem Content="Debug"/>
                 <ComboBoxItem Content="Release"/>
             </ComboBox>
         </StackPanel>
         <Grid Grid.Row="1">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="14*"/>
-                <ColumnDefinition Width="481*"/>
+                <ColumnDefinition/>
                 <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
-            <Grid Grid.Column="0" Grid.ColumnSpan="2" 
-                  VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
+            <Grid Grid.Column="0">
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="450"/>
+                    <RowDefinition/>
                     <RowDefinition/>
                 </Grid.RowDefinitions>
-                <utl:RenderSurfaceView/>
-                <!--<Border Background="{StaticResource Editor.Selected.BackgroundBrush}">
-                    <StackPanel VerticalAlignment="Center">
-                        <ctlr:NumberBox Value="0" Foreground="{StaticResource Editor.FontBrush}"/>
-                        <ctlr:ScalarBox Value="10" Multiplier="10"/>
-                    </StackPanel>
-                </Border>-->
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    <GridSplitter Grid.Row="0" Grid.RowSpan="2" Grid.Column="0" Background="Transparent"
+                                  VerticalAlignment="Stretch" HorizontalAlignment="Right" Width="5"/>
+                    <GridSplitter Grid.Row="1" Grid.ColumnSpan="2" Grid.Column="0" Background="Transparent"
+                                  VerticalAlignment="Top" HorizontalAlignment="Stretch" Height="5"/>
+                    <utl:RenderSurfaceView Grid.Row="0" Grid.Column="0" Margin="0,0,5,0"/>
+                    <utl:RenderSurfaceView Grid.Row="0" Grid.Column="1" Margin="0,0,0,0"/>
+                    <utl:RenderSurfaceView Grid.Row="1" Grid.Column="0" Margin="0,5,5,0"/>
+                    <utl:RenderSurfaceView Grid.Row="1" Grid.Column="1" Margin="0,5,0,0"/>
+                </Grid>
                 <GridSplitter Grid.Row="1" Height="5" HorizontalAlignment="Stretch" VerticalAlignment="Top"
                               Background="Transparent"/>
                 <Grid Grid.Row="1" Margin="0,5,0,0">
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="200"/>
+                        <ColumnDefinition/>
                         <ColumnDefinition/>
                     </Grid.ColumnDefinitions>
                     <utl:UndoRedoView DataContext="{Binding UndoRedo}" Grid.Column="0"
@@ -76,10 +86,10 @@
                     <utl:LoggerView Grid.Column="1" Margin="5,0,0,0"/>
                 </Grid>
             </Grid>
-            <GridSplitter Grid.Column="2" Width="5" HorizontalAlignment="Left"
+            <GridSplitter Grid.Column="1" Width="5" HorizontalAlignment="Left"
                           VerticalAlignment="Stretch"
                           Background="Transparent"/>
-            <Grid Grid.Column="2" Margin="5,0,0,0" MinWidth="300">
+            <Grid Grid.Column="1" Margin="5,0,0,0" MinWidth="300">
                 <Grid.RowDefinitions>
                     <RowDefinition/>
                     <RowDefinition/>

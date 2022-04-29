@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
@@ -44,7 +45,9 @@ namespace PrimalEditor.Utilities
             _host.MessageHook += new HwndSourceHook(HostMsgFilter);
             Content = _host;
 
-            var window = Application.Current.MainWindow;
+            var window = this.FindVisualParent<Window>();
+            Debug.Assert(window != null);
+
             var helper = new WindowInteropHelper(window);
             if(helper.Handle !=null)
             {
