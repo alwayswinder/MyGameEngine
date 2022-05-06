@@ -26,7 +26,7 @@ namespace primal::tools
 	struct geometry_import_settings
 	{
 		f32 smoothing_angle;
-		u8 calculate_normal;
+		u8 calculate_normals;
 		u8 calculate_tangents;
 		u8 reverse_handedness;
 		u8 import_embeded_textures;

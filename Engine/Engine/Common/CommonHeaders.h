@@ -16,6 +16,7 @@
 
 //Common
 #include "PrimitiveTypes.h"
+#include "../Utilities/Math.h"
 #include "../Utilities/utilities.h"
 #include "../Utilities/MathTypes.h"
 #include "id.h"
