@@ -3,6 +3,26 @@
 
 namespace primal::tools
 {
+	namespace packed_vertex
+	{
+		struct vertex_static
+		{
+			math::v3		position;
+			u8				reserved[3];
+			u8				t_sign;
+			u16				normal[2];
+			u16				tangent[2];
+			math::v2		uv;
+		};
+	}
+	struct vertex
+	{
+		math::v4 tangent{};
+		math::v3 position{};
+		math::v3 normal{};
+		math::v2 uv{};
+	};
+
 	struct mesh
 	{
 		utl::vector<math::v3>					positions;
@@ -12,7 +32,15 @@ namespace primal::tools
 			
 		utl::vector<u32>						raw_indices;
 
+		utl::vector<vertex>						vertices;
+		utl::vector<u32>						indices;
+
+		std::string								name;
+		utl::vector<packed_vertex::vertex_static>	packed_vertices_static;
+		f32										lod_threshould{ -1.f };
+		u32										lod_id{ u32_invalid_id };
 	};
+
 	struct lod_group
 	{
 		std::string			name;
@@ -38,4 +66,7 @@ namespace primal::tools
 		u32						 buffer_size;
 		geometry_import_settings settings;
 	};
+
+	void process_scene(scene& scene, const geometry_import_settings& settings);
+	void pack_data(const scene& scene, scene_data& data);
 }
