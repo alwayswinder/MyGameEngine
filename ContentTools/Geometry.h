@@ -27,7 +27,7 @@ namespace primal::tools
 	{
 		utl::vector<math::v3>					positions;
 		utl::vector<math::v3>					normals;
-		utl::vector<math::v3>					tangents;
+		utl::vector<math::v4>					tangents;
 		utl::vector<utl::vector<math::v2>>		uv_sets;
 			
 		utl::vector<u32>						raw_indices;
@@ -37,7 +37,7 @@ namespace primal::tools
 
 		std::string								name;
 		utl::vector<packed_vertex::vertex_static>	packed_vertices_static;
-		f32										lod_threshould{ -1.f };
+		f32										lod_threshold{ -1.f };
 		u32										lod_id{ u32_invalid_id };
 	};
 

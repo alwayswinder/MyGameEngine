@@ -34,7 +34,7 @@ namespace primal::tools
 
 		void process_normals(mesh& m, f32 smoothing_angle)
 		{
-			const f32 cos_angle{ XMScalarCos(pi - smoothing_angle * pi / 180.f) };
+			const f32 cos_alpha{ XMScalarCos(pi - smoothing_angle * pi / 180.f) };
 			const bool is_hard_edge{ XMScalarNearEqual(smoothing_angle, 180.f, epsilon) };
 			const bool is_solf_edge{ XMScalarNearEqual(smoothing_angle, 0.f, epsilon) };
 			const u32 num_indices{ (u32)m.raw_indices.size() };
@@ -65,13 +65,13 @@ namespace primal::tools
 					{
 						for (u32 k{j+1}; k< num_refs; ++k)
 						{
-							f32 n{ 0.f };
+							f32 cos_theta{ 0.f };
 							XMVECTOR n2{ XMLoadFloat3(&m.normals[refs[k]]) };
 							if (!is_solf_edge)
 							{
-								XMStoreFloat(&n, XMVector3Dot(n1, n2) * XMVector3ReciprocalLength(n1));
+								XMStoreFloat(&cos_theta, XMVector3Dot(n1, n2) * XMVector3ReciprocalLength(n1));
 							}
-							if (is_solf_edge || n >= cos_angle)
+							if (is_solf_edge || cos_theta >= cos_alpha)
 							{
 								n1 += n2;
 								m.indices[refs[k]] = m.indices[refs[j]];
@@ -162,7 +162,103 @@ namespace primal::tools
 			}
 			pack_vertices_static(m);
 		}
-	}
+		u64 get_mesh_size(const mesh& m)
+		{
+			const u64 num_vertices{ m.vertices.size() };
+			const u64 vertex_buffer_size{ sizeof(packed_vertex::vertex_static) * num_vertices };
+			const u64 index_size{ (num_vertices < (1 << 16)) ? sizeof(u16) : sizeof(u32) };
+			const u64 index_buffer_size{ index_size * m.indices.size() };
+
+			constexpr u64 su32{ sizeof(u32) };
+			const u64 size
+			{
+				su32 + m.name.size() + //mesh name
+				su32 + //lod id 
+				su32 + //vertex size
+				su32 + //number of vertices
+				su32 + //index size
+				su32 + //number of indices
+				sizeof(f32) +//LOD thresshold
+				vertex_buffer_size +
+				index_buffer_size
+			};
+			return size;
+		}
+
+		u64 get_scene_size(const scene& scene)
+		{
+			constexpr u64 su32{ sizeof(u32) };
+			u64 size
+			{
+				su32 +				//name length
+				scene.name.size() + //room for scene name string
+				su32				//number of LODs		
+			};
+			for (auto& lod : scene.lod_groups)
+			{
+				u64 lod_size
+				{
+					su32 + lod.name.size() +
+					su32
+				};
+				for (auto& m : lod.meshes)
+				{
+					lod_size += get_mesh_size(m);
+				}
+
+				size += lod_size;
+			}
+
+			return size;
+		}
+
+		void pack_mesh_data(const mesh& m, u8* const buffer, u64& at)
+		{
+			constexpr u64 su32{ sizeof(u32) };
+			u32 s{ 0 };
+			//mesh name 
+			s = (u32)m.name.size();
+			memcpy(&buffer[at], &s, su32); at += su32;
+			memcpy(&buffer[at], m.name.c_str(), s); at += s;
+			//lod id
+			s = m.lod_id;
+			memcpy(&buffer[at], &s, su32); at += su32;
+			//vertex size
+			constexpr u32 vertex_size{ sizeof(packed_vertex::vertex_static) };
+			s = vertex_size;
+			memcpy(&buffer[at], &s, su32); at += su32;
+			//number of vertices
+			const u32 num_vertices{ (u32)m.vertices.size() };
+			s = num_vertices;
+			memcpy(&buffer[at], &s, su32); at += su32;
+			//index size
+			const u32 index_size{ (num_vertices < (1 << 16)) ? sizeof(u16) : sizeof(u32) };
+			s = index_size;
+			memcpy(&buffer[at], &s, su32); at += su32;
+			//number of indices
+			const u32 num_indices{ (u32)m.indices.size() };
+			memcpy(&buffer[at], &s, su32); at += su32;
+			//LOD threshold
+			memcpy(&buffer[at], &m.lod_threshold, sizeof(f32)); at += sizeof(f32);
+			//vertex data
+			s = vertex_size * num_vertices;
+			memcpy(&buffer[at], m.packed_vertices_static.data(), s); at += s;
+			//index data 
+			s = index_size * num_indices;
+			void* data{ (void*)m.indices.data() };
+			utl::vector<u16> indices;
+			if (index_size == sizeof(u16))
+			{
+				indices.resize(num_indices);
+				for (u32 i{ 0 }; i < num_indices; ++i)
+				{
+					indices[i] = (u16)m.indices[i];
+				}
+				data = (void*)indices.data();
+			}
+			memcpy(&buffer[at], data, s); at += s;
+		}
+	}//namespace
 	void process_scene(scene& scene, const geometry_import_settings& settings)
 	{
 		for (auto& lod : scene.lod_groups)
@@ -173,8 +269,42 @@ namespace primal::tools
 			}
 		}
 	}
+
 	void pack_data(const scene& scene, scene_data& data)
 	{
+		constexpr u64 su32{ sizeof(u32) };
+		const u64 scene_size{ get_scene_size(scene) };
+		data.buffer_size = (u32)scene_size;
+		data.buffer = (u8*)CoTaskMemAlloc(scene_size);
+		assert(data.buffer);
 
+		u8* const buffer{ data.buffer };
+		u64 at{ 0 };
+		u32 s{ 0 };
+		
+		//scene name
+		s = (u32)scene.name.size();
+		memcpy(&buffer[at], &s, su32); at += su32;
+		memcpy(&buffer[at], scene.name.c_str(), s); at += su32;
+		//number of LODs
+		s = (u32)scene.lod_groups.size();
+		memcpy(&buffer[at], &s, su32); at += su32;
+
+		for (auto& lod : scene.lod_groups)
+		{
+			//Lod name
+			s = (u32)lod.name.size();
+			memcpy(&buffer[at], &s, su32); at += su32;
+			memcpy(&buffer[at], lod.name.c_str(), s); at += s;
+			//number of meshes in this LOD
+			s = (u32)lod.meshes.size();
+			memcpy(&buffer[at], &s, su32); at += su32;
+
+			for (auto& m : lod.meshes)
+			{
+				pack_mesh_data(m, buffer, at);
+			}
+
+		}
 	}
 }
