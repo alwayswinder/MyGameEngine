@@ -1,4 +1,5 @@
-﻿using PrimalEditor.GameDev;
+﻿using PrimalEditor.Content;
+using PrimalEditor.GameDev;
 using PrimalEditor.GameProject;
 using System;
 using System.Collections.Generic;
@@ -36,6 +37,12 @@ namespace PrimalEditor.Editors
         private void OnNewScript_Button_Click(object sender, RoutedEventArgs e)
         {
             new NewScriptDialog().ShowDialog();
+        }
+
+        private void OnCreatePrimitiveMesh_Button_Click(object sender, RoutedEventArgs e)
+        {
+            var dlg = new PrimitiveMeshDialog();
+            dlg.ShowDialog();
         }
     }
 }

@@ -8,8 +8,14 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Engine", "Engine\Engine\Engine.vcxproj", "{5B156CDF-C13D-418E-A388-20F5C7DE98C1}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "EngineTest", "EngineTest\EngineTest.vcxproj", "{21054502-CBFE-4A60-A4C7-41C57E6125CC}"
+	ProjectSection(ProjectDependencies) = postProject
+		{5B156CDF-C13D-418E-A388-20F5C7DE98C1} = {5B156CDF-C13D-418E-A388-20F5C7DE98C1}
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "EngineDLL", "EngineDLL\EngineDLL.vcxproj", "{95152611-ABD7-4493-8335-DEE7A260C43B}"
+	ProjectSection(ProjectDependencies) = postProject
+		{5B156CDF-C13D-418E-A388-20F5C7DE98C1} = {5B156CDF-C13D-418E-A388-20F5C7DE98C1}
+	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{E0E24FF3-E6AB-4F92-9481-9FC77A8F1598}"
 	ProjectSection(SolutionItems) = preProject
