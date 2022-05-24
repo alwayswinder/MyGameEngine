@@ -55,7 +55,7 @@ namespace PrimalEditor.DllWrappers
 {
     static class ContentToolsAPI
     {
-        private const string _toolsDLL = "ContentTools.dll";
+        private const string _toolsDLL = "../ContentTools/ContentTools.dll";
 
         [DllImport(_toolsDLL)]
         private static extern void CreatePrimitiveMesh([In, Out] SceneData data, PrimitiveInitInfo info);

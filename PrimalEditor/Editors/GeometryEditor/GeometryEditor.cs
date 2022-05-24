@@ -76,12 +76,13 @@ namespace PrimalEditor.Editors
                 if (_cameraPosition != value)
                 {
                     _cameraPosition = value;
+                    CameraDirection = new Vector3D(-value.X, -value.Y, -value.Z);
                     OnPropertyChanged(nameof(OffsetCameraPosition));
                     OnPropertyChanged(nameof(CameraPosition));
                 }
             }
         }
-        private Point3D _cameraTarget;
+        private Point3D _cameraTarget = new Point3D(0, 0, 10);
         public Point3D CameraTarget
         {
             get => _cameraTarget;
@@ -254,16 +255,16 @@ namespace PrimalEditor.Editors
                 }
             }
         }
-        private MeshRenderer _meshRenderer;
-        private MeshRenderer MeshRenderer
+        private MeshRenderer _meshRender;
+        public MeshRenderer MeshRender
         {
-            get => _meshRenderer;
+            get => _meshRender;
             set
             {
-                if(_meshRenderer != value)
+                if(_meshRender != value)
                 {
-                    _meshRenderer = value;
-                    OnPropertyChanged(nameof(MeshRenderer));
+                    _meshRender = value;
+                    OnPropertyChanged(nameof(MeshRender));
                 }
             }
         }
@@ -274,7 +275,7 @@ namespace PrimalEditor.Editors
             if(asset is Content.Geometry geometry)
             {
                 Geometry = geometry;
-                MeshRenderer = new MeshRenderer(Geometry.GetLODGroup().LODs[0], MeshRenderer);
+                MeshRender = new MeshRenderer(Geometry.GetLODGroup().LODs[0], MeshRender);
             }
         }
     }

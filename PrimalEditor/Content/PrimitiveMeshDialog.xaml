@@ -106,7 +106,13 @@
             <!--ICOSphere Settings-->
             <!--Cylinder Settings-->
             <!--Capsule Settings-->
-
+            <ed:GeometryView DataContext="{Binding MeshRender}" Grid.Column="1"/>
+            <StackPanel Grid.Column="1" Margin="5" Orientation="Horizontal" VerticalAlignment="Top" HorizontalAlignment="Left"
+                        IsHitTestVisible="False">
+                <TextBlock Text="{Binding MeshRender.CameraPosition.X, StringFormat=G5}"/>
+                <TextBlock Text="{Binding MeshRender.CameraPosition.Y, StringFormat=G5}" Margin="10,0"/>
+                <TextBlock Text="{Binding MeshRender.CameraPosition.Z, StringFormat=G5}"/>
+            </StackPanel>
         </Grid>
     </DockPanel>
 </Window>
