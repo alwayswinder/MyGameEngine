@@ -237,6 +237,7 @@ namespace primal::tools
 			memcpy(&buffer[at], &s, su32); at += su32;
 			//number of indices
 			const u32 num_indices{ (u32)m.indices.size() };
+			s = num_indices;
 			memcpy(&buffer[at], &s, su32); at += su32;
 			//LOD threshold
 			memcpy(&buffer[at], &m.lod_threshold, sizeof(f32)); at += sizeof(f32);

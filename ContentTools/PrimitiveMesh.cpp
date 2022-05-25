@@ -66,6 +66,10 @@ namespace primal::tools
 					v2 uv{ u_range.x, 1.f - v_range.x };
 					uv.x += i * u_step;
 					uv.y -= j * v_step;
+					/*v2 uv{ 0,1.f };
+					uv.x += (i % 2);
+					uv.y -= (j % 2);*/
+
 					uvs.emplace_back(uv);
 				}
 			}

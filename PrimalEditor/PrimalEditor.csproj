@@ -33,6 +33,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Resources\PrimitiveMeshView\PlaneTexture.png" />
+  </ItemGroup>
+
+  <ItemGroup>
     <COMReference Include="EnvDTE80">
       <WrapperTool>tlbimp</WrapperTool>
       <VersionMinor>0</VersionMinor>
@@ -55,6 +59,10 @@
 
   <ItemGroup>
     <None Include="..\.editorconfig" Link=".editorconfig" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Resources\PrimitiveMeshView\PlaneTexture.png" />
   </ItemGroup>
 
 </Project>
