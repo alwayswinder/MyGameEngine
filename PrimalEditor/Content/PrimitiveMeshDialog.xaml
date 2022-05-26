@@ -106,7 +106,7 @@
                            VerticalAlignment="Top" HorizontalAlignment="Left" Padding="5,0"
                            Foreground="{StaticResource Editor.FontBrush}"/>
                 </Grid>
-                <Button Content="Save" Width="96" Margin="5,0"/>
+                <Button Content="Save" Width="96" Margin="5,0" Click="OnSave_Button_Click"/>
                 
             </StackPanel>
             <!--Cube Settings-->
@@ -174,7 +174,7 @@
                 <Grid Margin="0,5">
                     <Border CornerRadius="3" BorderThickness="1" BorderBrush="{StaticResource Editor.Window.GrayBrush6}"
                             Margin="5" Background="{StaticResource Editor.Window.GrayBrush4}">
-                        <DockPanel Margin="5">
+                        <DockPanel Margin="5,15,5,5">
                             <TextBlock Text="Angle" Width="40" DockPanel.Dock="Left" VerticalAlignment="Center"/>
                             <TextBlock Text="{Binding Path=Value, ElementName=angleSliderUvSphere}" Width="30" 
                                            DockPanel.Dock="Right"/>
@@ -183,11 +183,11 @@
                                         x:Name="angleSliderUvSphere" ValueChanged="OnSlider_ValueChanged"/>
                         </DockPanel>
                     </Border>
-                    <Label Content="Segments" 
+                    <Label Content="Smoothing angle" 
                            VerticalAlignment="Top" HorizontalAlignment="Left" Padding="5,0"
                            Foreground="{StaticResource Editor.FontBrush}"/>
                 </Grid>
-                <Button Content="Save" Width="96" Margin="5,0"/>
+                <Button Content="Save" Width="96" Margin="5,0" Click="OnSave_Button_Click"/>
 
             </StackPanel>
             <!--ICOSphere Settings-->
