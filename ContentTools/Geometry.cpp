@@ -99,7 +99,7 @@ namespace primal::tools
 			utl::vector<utl::vector<u32>> idx_ref(num_vertices);
 			for (u32 i{ 0 }; i < num_indices; ++i)
 			{
-				idx_ref[m.raw_indices[i]].emplace_back(i);
+				idx_ref[old_indices[i]].emplace_back(i);
 			}
 			for (u32 i{0};i<num_vertices; ++i)
 			{
@@ -162,6 +162,7 @@ namespace primal::tools
 			}
 			pack_vertices_static(m);
 		}
+
 		u64 get_mesh_size(const mesh& m)
 		{
 			const u64 num_vertices{ m.vertices.size() };
