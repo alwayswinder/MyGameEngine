@@ -13,12 +13,28 @@ namespace PrimalEditor.ContentToolsAPIStructs
     [StructLayout(LayoutKind.Sequential)]
     class GeometryImportSettings
     {
-       public float smoothingAngle = 178f;
-       public byte calculateNormals = 0;
-       public byte calculateTangents = 1;
-       public byte reverseHandedness = 0;
-       public byte importEmbeded_textures = 1;
-       public byte importAnimations = 1;
+         public float smoothingAngle = 178f;
+         public byte calculateNormals = 0;
+         public byte calculateTangents = 1;
+         public byte reverseHandedness = 0;
+         public byte importEmbeded_textures = 1;
+         public byte importAnimations = 1;
+
+        private byte ToByte(bool value) => value ? (byte)1 : (byte)0;
+
+        public void FromContentSettings(Content.Geometry geometry)
+        {
+            var settings = geometry.ImportSettings;
+
+            smoothingAngle = settings.SmootingAngle;
+            calculateNormals = ToByte(settings.CalculateNormals);
+            calculateTangents = ToByte(settings.CalculateTangents);
+            reverseHandedness = ToByte(settings.ReverseHandedness);
+            importEmbeded_textures = ToByte(settings.ImportEmbededTextures);
+            importAnimations = ToByte(settings.ImportAnimations);
+
+
+        }
     }
 
 
@@ -66,6 +82,7 @@ namespace PrimalEditor.DllWrappers
             using var sceneData = new SceneData();
             try
             {
+                sceneData.ImportSettings.FromContentSettings(geometry);
                 CreatePrimitiveMesh(sceneData, info);
                 Debug.Assert(sceneData.Data != IntPtr.Zero && sceneData.DataSize > 0);
                 var data = new byte[sceneData.DataSize];
