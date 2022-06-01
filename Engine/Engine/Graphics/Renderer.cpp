@@ -16,9 +16,9 @@ namespace primal::graphics
 				d3d12::get_platform_interface(gfx);
 				break;
 			default:
-				break;
+				return false;
 			}
-			return false;
+			return true;
 		}
 	}
 	bool initialize(graphics_platform platform)

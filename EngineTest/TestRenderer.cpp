@@ -53,8 +53,8 @@ void destroy_render_surface(graphics::render_surface& surface)
 
 bool engine_test::initialize()
 {
-	bool result{ graphics::initialize(graphics::graphics_platform::direct3d12) };
-	if (!result) return result;
+	//bool result{ graphics::initialize(graphics::graphics_platform::direct3d12) };
+	//if (!result) return result;
 
 	platform::window_init_info info[]
 	{
@@ -82,5 +82,5 @@ void engine_test::shutdown()
 		destroy_render_surface(_surfaces[i]);
 	}
 
-	graphics::shutdown();
+	//graphics::shutdown();
 }
