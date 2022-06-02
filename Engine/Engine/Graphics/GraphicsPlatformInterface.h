@@ -8,5 +8,6 @@ namespace primal::graphics
 	{
 		bool(*initialize)();
 		void(*shutdown)();
+		void(*render)();
 	};
 }
