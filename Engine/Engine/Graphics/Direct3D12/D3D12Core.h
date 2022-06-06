@@ -1,5 +1,8 @@
 #pragma once
 #include "D3D12CommonHeaders.h"
+#include "D3D12Resource.h"
+
+
 
 namespace primal::graphics::d3d12::core
 {
@@ -32,4 +35,11 @@ namespace primal::graphics::d3d12::core
 
 	u32 current_frame_index();
 	void set_deferred_releases_flag();
+
+	descriptor_heap& rtv_heap();
+	descriptor_heap& dsv_heap();
+	descriptor_heap& srv_heap();
+	descriptor_heap& uav_heap();
+
+	DXGI_FORMAT default_render_target_format();
 }

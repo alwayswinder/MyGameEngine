@@ -1,14 +1,11 @@
 #include "D3D12Core.h"
-#include "D3D12Resource.h"
 
 using namespace Microsoft::WRL;
-
 
 namespace primal::graphics::d3d12::core
 {
 	namespace
 	{
-
 		class d3d12_command
 		{
 		public:
@@ -168,6 +165,7 @@ namespace primal::graphics::d3d12::core
 		u32							deferred_releases_flag[frame_buffer_count]{};
 		std::mutex					deferred_releases_mutx{};
 
+		constexpr DXGI_FORMAT render_target_format{ DXGI_FORMAT_R8G8B8A8_UNORM_SRGB };
 		constexpr D3D_FEATURE_LEVEL mininum_feature_level{ D3D_FEATURE_LEVEL_11_0 };
 
 		bool failed_init()
@@ -367,5 +365,27 @@ namespace primal::graphics::d3d12::core
 	void set_deferred_releases_flag()
 	{
 		deferred_releases_flag[current_frame_index()] = 1;
+	}
+
+
+	descriptor_heap& rtv_heap()
+	{
+		return rtv_desc_heap;
+	}
+	descriptor_heap& dsv_heap()
+	{
+		return dsv_desc_heap;
+	}
+	descriptor_heap& srv_heap()
+	{
+		return srv_desc_heap;
+	}
+	descriptor_heap& uav_heap()
+	{
+		return uav_desc_heap;
+	}
+	DXGI_FORMAT default_render_target_format()
+	{
+		return render_target_format;
 	}
 }
