@@ -9,7 +9,7 @@ namespace primal::platform
 	{
 	public:
 		constexpr explicit window(window_id id) :_id{ id } {}
-		constexpr window() : _id{ id::invalid_id } {}
+		constexpr window() = default;
 		constexpr window_id get_id()const { return _id; }
 		constexpr bool is_valid()const { return id::is_valid(_id); }
 
