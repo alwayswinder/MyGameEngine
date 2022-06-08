@@ -36,7 +36,10 @@ namespace primal::graphics::d3d12
 			}
 			return *this;
 		}
-#endif
+#else
+		DISABLE_COPY_AND_MOVE(d3d12_surface);
+#endif  //USE_STL_VECTOR
+
 		~d3d12_surface()
 		{
 			release();
@@ -87,7 +90,7 @@ namespace primal::graphics::d3d12
 			_allow_tearing = 0;
 			_present_flags = 0;
 		}
-#endif
+#endif USE_STL_VECTOR
 
 		struct render_target_data
 		{
