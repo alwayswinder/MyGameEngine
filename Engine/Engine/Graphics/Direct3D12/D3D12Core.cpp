@@ -166,7 +166,7 @@ namespace primal::graphics::d3d12::core
 
 		utl::vector<IUnknown*>		deferred_releases[frame_buffer_count]{};
 		u32							deferred_releases_flag[frame_buffer_count]{};
-		std::mutex					deferred_releases_mutx{};
+		std::mutex					deferred_releases_mutex{};
 
 		constexpr DXGI_FORMAT render_target_format{ DXGI_FORMAT_R8G8B8A8_UNORM_SRGB };
 		constexpr D3D_FEATURE_LEVEL mininum_feature_level{ D3D_FEATURE_LEVEL_11_0 };
@@ -217,7 +217,7 @@ namespace primal::graphics::d3d12::core
 		}
 		void __declspec(noinline) process_deferred_releases(u32 frame_idx)
 		{
-			std::lock_guard lock{ deferred_releases_mutx };
+			std::lock_guard lock{ deferred_releases_mutex };
 			deferred_releases_flag[frame_idx] = 0;
 
 			rtv_desc_heap.process_deferred_free(frame_idx);
@@ -238,7 +238,7 @@ namespace primal::graphics::d3d12::core
 		void deferred_release(IUnknown* resource)
 		{
 			const u32 frame_idx{ current_frame_index() };
-			std::lock_guard lock{ deferred_releases_mutx };
+			std::lock_guard lock{ deferred_releases_mutex };
 			deferred_releases[frame_idx].push_back(resource);
 			set_deferred_releases_flag();
 		}
