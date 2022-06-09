@@ -66,9 +66,9 @@ namespace primal::utl
 		{
 			return _array.size();
 		}
-		constexpr u32 empty()const
+		constexpr bool empty()const
 		{
-			return _size = 0;
+			return _size == 0;
 		}
 
 		[[nodiscard]] constexpr T& operator[](u32 id)
