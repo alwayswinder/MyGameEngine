@@ -6,6 +6,11 @@ namespace primal::graphics
 {
 	namespace
 	{
+		constexpr const char* engine_shader_paths[]
+		{
+			".\\shaders\\d3d12\\shaders.bin",
+		};
+
 		platform_interface gfx{};
 
 		bool set_platform_interface(graphics_platform platform)
@@ -18,6 +23,7 @@ namespace primal::graphics
 			default:
 				return false;
 			}
+			assert(gfx.platform == platform);
 			return true;
 		}
 	}
@@ -40,6 +46,7 @@ namespace primal::graphics
 		assert(id::is_valid(id));
 		gfx.surface.remove(id);
 	}
+
 	void surface::resize(u32 width, u32 height)const
 	{
 		assert(is_valid());
@@ -59,5 +66,10 @@ namespace primal::graphics
 	{
 		assert(is_valid());
 		gfx.surface.render(_id);
+	}
+
+	const char* get_engine_sahders_path()
+	{
+		return engine_shader_paths[(u32)gfx.platform];
 	}
 }

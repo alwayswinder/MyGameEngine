@@ -2,6 +2,7 @@
 #include "../Components/Entity.h"
 #include "../Components/Transform.h"
 #include "../Components/Script.h"
+#include "../Graphics/Renderer.h"
 
 #if !defined(SHIPPING)
 #include <fstream>
@@ -137,5 +138,11 @@ namespace primal::content
 			game_entity::remove(entity.get_id());
 		}
 	}
+
+	bool load_engine_shaders(std::unique_ptr<u8[]>& shaders, u64& size)
+	{
+		return true;
+	}
+
 }
 #endif

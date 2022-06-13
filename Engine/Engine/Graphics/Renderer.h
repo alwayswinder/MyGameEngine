@@ -38,4 +38,5 @@ namespace primal::graphics
 	surface create_surface(platform::window window);
 	void remove_surface(surface_id id);
 
+	const char* get_engine_sahders_path();
 }
