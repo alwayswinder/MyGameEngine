@@ -18,19 +18,19 @@ namespace primal::utl
 		{
 			resize(count, value);
 		}
-		template<typename it, typename = std::enable_if_t<std::_Is_iterator_v<it>>>
+		/*template<typename it, std::enable_if_t<std::_Is_iterator_v<it>, int> = 0>
 		constexpr explicit vector(it first, it last)
 		{
 			for (; first != last; ++first)
 			{
 				emplace_back(*first);
 			}
-		}
+		}*/
 		constexpr vector(const vector& o)
 		{
 			*this = o;
 		}
-		constexpr vector(const vector&& o)
+		constexpr vector(vector&& o)
 			:_capacity{ o._capacity }, _size{ o._size }, _data{ o._data }
 		{
 			o.reset();
@@ -89,7 +89,7 @@ namespace primal::utl
 		}
 		constexpr void resize(u64 new_size)
 		{
-			static_assert(std::is_default_constructible_v<T>,
+			static_assert(std::is_default_constructible<T>::value,
 				"Type must be default-constructible.");
 			if (new_size > _size)
 			{
@@ -111,7 +111,7 @@ namespace primal::utl
 		}
 		constexpr void resize(u64 new_size, const T& value)
 		{
-			static_assert(std::is_copy_constructible_v<T>,
+			static_assert(std::is_copy_constructible<T>::value,
 				"Type must be copy-constructible.");
 			if (new_size > _size)
 			{

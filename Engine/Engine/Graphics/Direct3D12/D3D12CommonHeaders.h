@@ -15,6 +15,8 @@
 namespace primal::graphics::d3d12
 {
 	constexpr u32 frame_buffer_count{ 3 };
+	using id3d12_device = ID3D12Device6;
+	using id3d12_graphics_command_list = ID3D12GraphicsCommandList5;
 }
 
 #ifdef _DEBUG
