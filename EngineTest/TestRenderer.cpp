@@ -3,6 +3,7 @@
 #include "..\Engine\Platform\Platform.h"
 #include "..\Engine\Platform\PlatformTypes.h"
 #include "..\Engine\Graphics\Renderer.h"
+#include "ShaderCompilation.h"
 
 #if TEST_RENDERER
 
@@ -82,8 +83,13 @@ void destroy_render_surface(graphics::render_surface& surface)
 
 bool engine_test::initialize()
 {
-	bool result{ graphics::initialize(graphics::graphics_platform::direct3d12) };
-	if (!result) return result;
+	while (!compile_shaders())
+	{
+		if (MessageBox(nullptr, L"Failed to compile engine shaders.", L"Shader Compilation Error", MB_RETRYCANCEL) != IDRETRY)
+			return false;
+	}
+
+	if (!graphics::initialize(graphics::graphics_platform::direct3d12)) return false;
 
 	platform::window_init_info info[]
 	{

@@ -68,8 +68,12 @@ namespace primal::graphics
 		gfx.surface.render(_id);
 	}
 
-	const char* get_engine_sahders_path()
+	const char* get_engine_shaders_path()
 	{
 		return engine_shader_paths[(u32)gfx.platform];
+	}
+	const char* get_engine_shaders_path(graphics_platform platform)
+	{
+		return engine_shader_paths[(u32)platform];
 	}
 }
