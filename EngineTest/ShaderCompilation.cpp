@@ -125,7 +125,7 @@ namespace
 			return shader.Detach();
 		}
 	private:
-		const char* _profile_strings[shader_type::count]{ "vs_6_5","hs_6_5", "ds_6_5", "gs_6_5", "ps_6_5", "cs_6_5" };
+		constexpr static const char* _profile_strings[]{ "vs_6_5","hs_6_5", "ds_6_5", "gs_6_5", "ps_6_5", "cs_6_5", "as_6_5", "ms_6_5" };
 		static_assert(_countof(_profile_strings) == shader_type::count);
 
 		ComPtr<IDxcCompiler3>			_compiler{nullptr};
@@ -135,7 +135,7 @@ namespace
 
 	decltype(auto) get_engine_shaders_path()
 	{
-		return std::filesystem::absolute(graphics::get_engine_shaders_path(graphics::graphics_platform::direct3d12));
+		return std::filesystem::path(graphics::get_engine_shaders_path(graphics::graphics_platform::direct3d12));
 	}
 
 	bool compiled_shader_are_up_to_date()
@@ -153,7 +153,7 @@ namespace
 			path = shaders_source_path;
 			path += info.file;
 
-			full_path = std::filesystem::absolute(path);
+			full_path = path;
 			if (!std::filesystem::exists(full_path)) return false;
 
 			auto shader_file_time = std::filesystem::last_write_time(full_path);
@@ -201,7 +201,7 @@ bool compile_shaders()
 		auto& info = shader_files[i];
 		path = shaders_source_path;
 		path += info.file;
-		fulll_path = std::filesystem::absolute(path);
+		fulll_path = path;
 		if (!std::filesystem::exists(fulll_path)) return false;
 
 		ComPtr<IDxcBlob> compiled_shader{ compiler.compile(info, fulll_path) };
