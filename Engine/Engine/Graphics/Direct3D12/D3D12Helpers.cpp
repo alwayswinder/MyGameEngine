@@ -1,4 +1,3 @@
-#include "D3D12Helpers.h"
 #include "D3D12Core.h"
 
 namespace primal::graphics::d3d12::d3dx 

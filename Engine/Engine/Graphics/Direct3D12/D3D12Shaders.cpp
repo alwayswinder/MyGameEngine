@@ -34,9 +34,7 @@ namespace primal::graphics::d3d12::shaders
 				offset += sizeof(u64) + shader->size;
 				++index;
 			}
-			assert(offset == size && index == engine_shader::count);
-
-			
+			assert(offset == size && index == engine_shader::count);	
 
 			return result;
 		}
