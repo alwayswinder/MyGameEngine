@@ -3,6 +3,11 @@
 
 #include "../../Common/commonHeaders.h"
 #include "../Renderer.h"
+#include "../../Platform/Window.h"
+
+#ifndef NOMINMAX
+#define NOMINMAX
+#endif
 
 #include <dxgi1_6.h>
 #include <d3d12.h>

@@ -15,6 +15,60 @@ namespace primal::graphics::d3d12::d3dx
 		};
 	}heap_properties;
 
+	constexpr struct
+	{
+		const D3D12_RASTERIZER_DESC no_cull
+		{
+			D3D12_FILL_MODE_SOLID,
+			D3D12_CULL_MODE_NONE,
+			0,0,0,0,
+			1,1,
+			0,0,
+			D3D12_CONSERVATIVE_RASTERIZATION_MODE_OFF,
+		};
+
+		const D3D12_RASTERIZER_DESC backface_cull
+		{
+			D3D12_FILL_MODE_SOLID,
+			D3D12_CULL_MODE_BACK,
+			0,0,0,0,
+			1,1,
+			0,0,
+			D3D12_CONSERVATIVE_RASTERIZATION_MODE_OFF,
+		};
+
+		const D3D12_RASTERIZER_DESC frontface_cull
+		{
+			D3D12_FILL_MODE_SOLID,
+			D3D12_CULL_MODE_FRONT,
+			0,0,0,0,
+			1,1,
+			0,0,
+			D3D12_CONSERVATIVE_RASTERIZATION_MODE_OFF,
+		};
+
+		const D3D12_RASTERIZER_DESC wireframe
+		{
+			D3D12_FILL_MODE_WIREFRAME,
+			D3D12_CULL_MODE_FRONT,
+			0,0,0,0,
+			1,1,
+			0,0,
+			D3D12_CONSERVATIVE_RASTERIZATION_MODE_OFF,
+		};
+	}rasterizer_state;
+
+	constexpr struct 
+	{
+		const D3D12_DEPTH_STENCIL_DESC1 disabled
+		{
+			0,
+			D3D12_DEPTH_WRITE_MASK_ZERO,
+			D3D12_COMPARISON_FUNC_LESS_EQUAL,
+			0, 0, 0, {}, {},0,
+		};
+	}depth_state;
+
 	ID3D12RootSignature* create_root_signature(const D3D12_ROOT_SIGNATURE_DESC1& desc);
 
 	struct d3d12_descriptor_range : public D3D12_DESCRIPTOR_RANGE1
