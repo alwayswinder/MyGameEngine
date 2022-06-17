@@ -65,12 +65,13 @@ namespace
 			std::wstring file{ to_wstring(info.file) };
 			std::wstring func{ to_wstring(info.function) };
 			std::wstring prof{ to_wstring(_profile_strings[(u32)info.type]) };
-
+			std::wstring inc{ to_wstring(shaders_source_path) };
 			LPCWSTR args[]
 			{
 				file.c_str(),
 				L"-E", func.c_str(),
 				L"-T", prof.c_str(),
+				L"-I", inc.c_str(),
 				DXC_ARG_ALL_RESOURCES_BOUND,
 #if _DEBUG
 				DXC_ARG_DEBUG,

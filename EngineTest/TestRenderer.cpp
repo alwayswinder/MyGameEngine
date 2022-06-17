@@ -64,8 +64,10 @@ LRESULT win_proc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam)
 		{
 			is_restarting = true;
 			test_shutdown();
-			test_initialize();
-			is_restarting = false;
+			if (test_initialize())
+			{
+				is_restarting = false;
+			}
 		}
 	}
 	return DefWindowProc(hwnd, msg, wparam, lparam);
