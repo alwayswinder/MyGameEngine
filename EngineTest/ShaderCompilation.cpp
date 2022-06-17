@@ -28,6 +28,7 @@ namespace
 	{
 		{"FullScreenTriangle.hlsl", "FullScreenTriangleVS", engine_shader::fullscreen_triangle_vs, shader_type::vertex},
 		{"FillColor.hlsl", "FillColorPS", engine_shader::fill_color_ps, shader_type::pixel},
+		{"PostProcess.hlsl", "PostProcessPS", engine_shader::post_process_ps, shader_type::pixel},
 	};
 	static_assert(_countof(shader_files) == engine_shader::count);
 	constexpr const char* shaders_source_path{ "../../../Engine/Engine/Graphics/Direct3D12/Shaders/" };

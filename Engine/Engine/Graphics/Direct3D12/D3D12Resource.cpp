@@ -218,6 +218,7 @@ namespace primal::graphics::d3d12
 	}
 	void d3d12_depth_buffer::release()
 	{
-
+		core::dsv_heap().free(_dsv);
+		_texture.release();
 	}
 }
