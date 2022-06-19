@@ -66,7 +66,7 @@ namespace primal::graphics::d3d12
 		D3D12_SHADER_RESOURCE_VIEW_DESC*	srv_desc{ nullptr };
 		D3D12_RESOURCE_DESC*				desc{ nullptr };
 		D3D12_RESOURCE_ALLOCATION_INFO1		allocation_info{};
-		D3D12_RESOURCE_STATES				inital_state{};
+		D3D12_RESOURCE_STATES				initial_state{};
 		D3D12_CLEAR_VALUE					clear_value{};
 	};
 

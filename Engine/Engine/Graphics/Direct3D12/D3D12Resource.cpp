@@ -128,7 +128,7 @@ namespace primal::graphics::d3d12
 		{
 			assert(!info.resource);
 			DXCall(device->CreatePlacedResource(info.heap, info.allocation_info.Offset, info.desc,
-				info.inital_state, clear_value, IID_PPV_ARGS(&_resource)));
+				info.initial_state, clear_value, IID_PPV_ARGS(&_resource)));
 
 		}
 		else if(info.desc)
@@ -137,7 +137,7 @@ namespace primal::graphics::d3d12
 			
 			DXCall(device->CreateCommittedResource(
 				&d3dx::heap_properties.default_heap, D3D12_HEAP_FLAG_NONE, info.desc, 
-				info.inital_state, clear_value, IID_PPV_ARGS(&_resource)));
+				info.initial_state, clear_value, IID_PPV_ARGS(&_resource)));
 		}
 
 		assert(_resource);

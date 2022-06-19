@@ -7,7 +7,15 @@ namespace primal::graphics::d3d12::gpass
 {
 	namespace
 	{
-		constexpr DXGI_FORMAT			main_buffer_format{ DXGI_FORMAT_R16G16_FLOAT };
+		struct gpass_root_param_indices 
+		{
+			enum : u32 
+			{
+				root_constants,
+				count
+			};
+		};
+		constexpr DXGI_FORMAT			main_buffer_format{ DXGI_FORMAT_R16G16B16A16_FLOAT };
 		constexpr DXGI_FORMAT			depth_buffer_format{ DXGI_FORMAT_D32_FLOAT };
 		constexpr math::u32v2			initial_dimensions{ 100, 100 };
 
@@ -47,7 +55,7 @@ namespace primal::graphics::d3d12::gpass
 			{
 				d3d12_texture_init_info info{};
 				info.desc = &desc;
-				info.inital_state = D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE;
+				info.initial_state = D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE;
 				info.clear_value.Format = desc.Format;
 				memcpy(&info.clear_value.Color, &clear_value[0], sizeof(clear_value));
 				gpass_main_buffer = d3d12_render_texture{ info };
@@ -59,7 +67,7 @@ namespace primal::graphics::d3d12::gpass
 			{
 				d3d12_texture_init_info info{};
 				info.desc = &desc;
-				info.inital_state = D3D12_RESOURCE_STATE_DEPTH_READ | D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE |
+				info.initial_state = D3D12_RESOURCE_STATE_DEPTH_READ | D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE |
 					D3D12_RESOURCE_STATE_NON_PIXEL_SHADER_RESOURCE;
 				info.clear_value.Format = desc.Format;
 				info.clear_value.DepthStencil.Depth = 0.f;
