@@ -105,10 +105,10 @@ bool test_initialize()
 
 	platform::window_init_info info[]
 	{
-		{ &win_proc, nullptr, L"Render window 1", 100, 100, 400, 400},
+		//{ &win_proc, nullptr, L"Render window 1", 100, 100, 400, 400},
 		//{ &win_proc, nullptr, L"Render window 2", 200, 200, 500, 500 },
 		//{ &win_proc, nullptr, L"Render window 3", 300, 300, 600, 600 },
-		//{ &win_proc, nullptr, L"Render window 4", 400, 400, 700, 700 },
+		{ &win_proc, nullptr, L"Render window 4", 400, 400, 700, 700 },
 	};
 	static_assert(_countof(info) == _countof(_surfaces));
 
