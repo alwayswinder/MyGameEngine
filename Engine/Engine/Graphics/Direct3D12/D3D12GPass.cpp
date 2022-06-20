@@ -22,6 +22,7 @@ namespace primal::graphics::d3d12::gpass
 		d3d12_render_texture			gpass_main_buffer{};
 		d3d12_depth_buffer				gpass_depth_buffer{};
 		math::u32v2						dimensions{ initial_dimensions };
+		D3D12_RESOURCE_BARRIER_FLAGS	flags{};
 
 		ID3D12RootSignature*			gpass_root_sig{ nullptr };
 		ID3D12PipelineState*			gpass_pso{ nullptr };
@@ -78,6 +79,8 @@ namespace primal::graphics::d3d12::gpass
 
 			NAME_D3D12_OBJECT(gpass_main_buffer.resource(), L"GPass Main Buffer");
 			NAME_D3D12_OBJECT(gpass_depth_buffer.resource(), L"GPass Depth Buffer");
+
+			flags = {};
 
 			return gpass_main_buffer.resource() && gpass_depth_buffer.resource();
 		}
@@ -177,14 +180,23 @@ namespace primal::graphics::d3d12::gpass
 
 	void add_transitions_for_depth_prepass(d3dx::d3d12_resource_barrier& barriers)
 	{
+		barriers.add(gpass_main_buffer.resource(),
+			D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE,
+			D3D12_RESOURCE_STATE_RENDER_TARGET,
+			D3D12_RESOURCE_BARRIER_FLAG_BEGIN_ONLY);
+
 		barriers.add(gpass_depth_buffer.resource(),
 			D3D12_RESOURCE_STATE_DEPTH_READ | D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE | D3D12_RESOURCE_STATE_NON_PIXEL_SHADER_RESOURCE,
-			D3D12_RESOURCE_STATE_DEPTH_WRITE);
+			D3D12_RESOURCE_STATE_DEPTH_WRITE, flags);
+
+		flags = D3D12_RESOURCE_BARRIER_FLAG_END_ONLY;
 	}
 	void add_transitions_for_gpass(d3dx::d3d12_resource_barrier& barriers)
 	{
 		barriers.add(gpass_main_buffer.resource(),
-			D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE, D3D12_RESOURCE_STATE_RENDER_TARGET);
+			D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE,
+			D3D12_RESOURCE_STATE_RENDER_TARGET,
+			D3D12_RESOURCE_BARRIER_FLAG_END_ONLY);
 
 		barriers.add(gpass_depth_buffer.resource(),
 			D3D12_RESOURCE_STATE_DEPTH_WRITE,
@@ -194,7 +206,13 @@ namespace primal::graphics::d3d12::gpass
 	void add_transitions_for_post_process(d3dx::d3d12_resource_barrier& barriers)
 	{
 		barriers.add(gpass_main_buffer.resource(),
-			D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE);
+			D3D12_RESOURCE_STATE_RENDER_TARGET,
+			D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE);
+
+		barriers.add(gpass_depth_buffer.resource(),
+			D3D12_RESOURCE_STATE_DEPTH_READ | D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE | D3D12_RESOURCE_STATE_NON_PIXEL_SHADER_RESOURCE,
+			D3D12_RESOURCE_STATE_DEPTH_WRITE, D3D12_RESOURCE_BARRIER_FLAG_BEGIN_ONLY);
+
 	}
 
 	void set_render_targets_for_depth_prepass(id3d12_graphics_command_list* cmd_list)
