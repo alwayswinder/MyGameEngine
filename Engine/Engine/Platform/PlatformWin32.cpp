@@ -149,7 +149,7 @@ namespace primal::platform
 			return get_from_id(id).is_closed;
 		}
 	}
-	window create_window(const window_init_info* const init_info /* = nullptr */)
+	window create_window(const window_init_info*  init_info /* = nullptr */)
 	{
 		window_proc callback{ init_info ? init_info->callback : nullptr };
 		window_handle parent{ init_info ? init_info->parent : nullptr };
