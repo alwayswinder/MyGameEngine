@@ -33,7 +33,7 @@ namespace PrimalEditor.Utilities
             if (!e.RepeatEvent)
             {
                 EngineAPI.ResizeRenderSurface(SurfaceId);
-                Logger.Log(MessageType.Info, "Resized");
+               // Logger.Log(MessageType.Info, "Resized");
             }
         }
         public RenderSurfaceHost(double width, double height)

@@ -40,12 +40,12 @@
         </Grid.RowDefinitions>
         <Menu Grid.Row="0">
             <MenuItem Header="File">
-                <MenuItem Header="New Project..."/>
-                <MenuItem Header="Open Project..."/>
+                <MenuItem Header="New Project..." Command="ApplicationCommands.New"/>
+                <MenuItem Header="Open Project..." Command="ApplicationCommands.Open"/>
                 <Separator/>
-                <MenuItem Header="Save Project"/>
+                <MenuItem Header="Save Project" Command="{Binding SaveCommand}"/>
                 <Separator/>
-                <MenuItem Header="Exit"/>
+                <MenuItem Header="Exit" Command="ApplicationCommands.Close"/>
             </MenuItem>
             <MenuItem Header="Settings"/>
             <MenuItem Header="View"/>

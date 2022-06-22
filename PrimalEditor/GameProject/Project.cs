@@ -16,14 +16,6 @@ using System.Windows.Input;
 
 namespace PrimalEditor.GameProject
 {
-    enum BuildConfiguration
-    {
-        Debug,
-        DebugEditor,
-        Release,
-        ReleaseEditor,
-    }
-
     [DataContract(Name ="Game")]
     class Project: ViewModeBase
     {
@@ -31,12 +23,11 @@ namespace PrimalEditor.GameProject
         public string Name { get; private set; } = "New Project";
         [DataMember]
         public string Path { get; private set; }
-        public static string Extension { get; } = ".primal";
+        public static string Extension = ".primal";
         public string FullPath => $"{Path}{Name}{Extension}";
         public string Solution => $@"{Path}{Name}.sln";
         public string ContentPath => $@"{Path}Content\";
 
-        private static readonly string[] _buildConfigurationName = new string[] { "Debug", "DebugEditor", "Release", "ReleaseEditor" };
         private int _buildConfig;
         [DataMember]
         public int BuildConfig
@@ -52,13 +43,13 @@ namespace PrimalEditor.GameProject
             }
         }
         public BuildConfiguration StandAloneBuildConfig => BuildConfig == 0 ? BuildConfiguration.Debug : BuildConfiguration.Release;
-        public BuildConfiguration DllBuildConfig => BuildConfig == 0 ? BuildConfiguration.DebugEditor : BuildConfiguration.ReleaseEditor;
+        public BuildConfiguration DLLBuildConfig => BuildConfig == 0 ? BuildConfiguration.DebugEditor : BuildConfiguration.ReleaseEditor;
 
         private string[] _availableScripts;
         public string[] AvailableScripts
         {
             get => _availableScripts;
-            set
+            private set
             {
                 if(_availableScripts != value)
                 {
@@ -68,8 +59,8 @@ namespace PrimalEditor.GameProject
             }
         }
 
-        [DataMember(Name = "Scenes")]
-        private ObservableCollection<Scene> _scenes = new ObservableCollection<Scene>();
+        [DataMember(Name = nameof(Scenes))]
+        private readonly ObservableCollection<Scene> _scenes = new ObservableCollection<Scene>();
         public ReadOnlyObservableCollection<Scene> Scenes
         { get; private set; }
         private Scene _activeScene;
@@ -86,7 +77,7 @@ namespace PrimalEditor.GameProject
                 }
             }
         }
-        public static Project Current => Application.Current.MainWindow.DataContext as Project;
+        public static Project Current => Application.Current.MainWindow?.DataContext as Project;
         public static UndoRedo UndoRedo { get; } = new UndoRedo();
         public ICommand UndoCommand { get; private set; }
         public ICommand RedoCommand { get; private set; }
@@ -131,7 +122,7 @@ namespace PrimalEditor.GameProject
             && VisualStudio.BuildDone);
             DebugStopCommand = new RelayCommand<object>(async x => await StopGame(), x=>VisualStudio.IsDebugging());
 
-            BuildCommand = new RelayCommand<bool>(async x => await BuildGameCodeDll(x), x => !VisualStudio.IsDebugging() 
+            BuildCommand = new RelayCommand<bool>(async x => await BuildGameCodeDLL(x), x => !VisualStudio.IsDebugging() 
             && VisualStudio.BuildDone);
 
             OnPropertyChanged(nameof(AddSceneCommand));
@@ -146,7 +137,6 @@ namespace PrimalEditor.GameProject
             OnPropertyChanged(nameof(BuildCommand));
         }
 
-        private static string GetConfigurationName(BuildConfiguration config) => _buildConfigurationName[(int)config];
         private void AddScene(string sceneName)
         {
             Debug.Assert(!string.IsNullOrEmpty(sceneName.Trim()));
@@ -164,9 +154,10 @@ namespace PrimalEditor.GameProject
         }
         public void Unload()
         {
-            UnloadGameCodeDll();
+            UnloadGameCodeDLL();
             VisualStudio.CloseVisualStudio();
             UndoRedo.Reset();
+            Logger.Clear();
         }
         public static void Save(Project project)
         {
@@ -175,7 +166,7 @@ namespace PrimalEditor.GameProject
         }
         private void SaveToBinary()
         {
-            var configName = GetConfigurationName(StandAloneBuildConfig);
+            var configName = VisualStudio.GetConfigurationName(StandAloneBuildConfig);
             var bin = $@"{Path}x64\{configName}\game.bin";
             using(var bw = new BinaryWriter(File.Open(bin, FileMode.Create, FileAccess.Write)))
             {
@@ -195,25 +186,24 @@ namespace PrimalEditor.GameProject
 
         private async Task RunGame(bool debug)
         {
-            var configName = GetConfigurationName(StandAloneBuildConfig);
-            await Task.Run(() => VisualStudio.BuildSolution(this, configName, debug));
+            await Task.Run(() => VisualStudio.BuildSolution(this, StandAloneBuildConfig, debug));
             if(VisualStudio.BuildSucceeded)
             {
                 SaveToBinary();
-                await Task.Run(()=>VisualStudio.Run(this, configName, debug));
+                await Task.Run(()=>VisualStudio.Run(this, StandAloneBuildConfig, debug));
             }
         }
         private async Task StopGame() => await Task.Run(() => VisualStudio.Stop());
 
-        private async Task BuildGameCodeDll(bool showWindow=true)
+        private async Task BuildGameCodeDLL(bool showWindow=true)
         {
             try
             {
-                UnloadGameCodeDll();
-                await Task.Run(() => VisualStudio.BuildSolution(this, GetConfigurationName(DllBuildConfig), showWindow));
+                UnloadGameCodeDLL();
+                await Task.Run(() => VisualStudio.BuildSolution(this, DLLBuildConfig, showWindow));
                 if (VisualStudio.BuildSucceeded)
                 {
-                    LoadGameCodeDll();
+                    LoadGameCodeDLL();
                 }
             }
             catch (Exception ex)
@@ -223,9 +213,9 @@ namespace PrimalEditor.GameProject
             }
         }
 
-        private void LoadGameCodeDll()
+        private void LoadGameCodeDLL()
         {
-            var configName = GetConfigurationName(DllBuildConfig);
+            var configName = VisualStudio.GetConfigurationName(DLLBuildConfig);
             var dll = $@"{Path}x64\{configName}\{Name}.dll";
             if (File.Exists(dll) && EngineAPI.LoadGameCodeDll(dll) != 0)
             {
@@ -238,7 +228,7 @@ namespace PrimalEditor.GameProject
                 Logger.Log(MessageType.Warning, "Failed to load game code DLL file, Try to build the project first.");
             }
         }
-        private void UnloadGameCodeDll()
+        private void UnloadGameCodeDLL()
         {
             ActiveScene.GameEntities.Where(x => x.GetComponent<Script>() != null).ToList().ForEach(x => x.IsActive = false);
             if(EngineAPI.UnloadGameCodeDll()!=0)
@@ -259,7 +249,7 @@ namespace PrimalEditor.GameProject
             ActiveScene = Scenes.FirstOrDefault(x => x.IsActive);
             Debug.Assert(ActiveScene != null);
 
-            await BuildGameCodeDll(false);
+            await BuildGameCodeDLL(false);
 
             SetCommand();
         }
@@ -267,6 +257,7 @@ namespace PrimalEditor.GameProject
         {
             Name = name;
             Path = path;
+            Debug.Assert(File.Exists((Path + Name + Extension).ToLower()));
             OnDeserialized(new StreamingContext());
         }
 

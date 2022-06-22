@@ -21,6 +21,9 @@ namespace PrimalEditor.GameProject
     public partial class ProjectBrowserDialg : Window
     {
         private readonly CubicEase _easing = new CubicEase() { EasingMode = EasingMode.EaseInOut };
+
+        public static bool GotoNewProjectTab { get;  set; }
+
         public ProjectBrowserDialg()
         {
             InitializeComponent();
@@ -29,12 +32,16 @@ namespace PrimalEditor.GameProject
         private void OnProjectBrowserDialgLoaded(object sender, RoutedEventArgs e)
         {
             Loaded -= OnProjectBrowserDialgLoaded;
-            if(!OpenProject.Projects.Any())
+            if(!OpenProject.Projects.Any() || GotoNewProjectTab)
             {
-                openProjectButton.IsEnabled = false;
-                openProjectView.Visibility = Visibility.Hidden;
+                if (!GotoNewProjectTab)
+                {
+                    openProjectButton.IsEnabled = false;
+                    openProjectView.Visibility = Visibility.Hidden;
+                }
                 OnToggleButton_Click(createProjectButton, new RoutedEventArgs());
             }
+            GotoNewProjectTab = false;
         }
 
         private void OnToggleButton_Click(object sender, RoutedEventArgs e)

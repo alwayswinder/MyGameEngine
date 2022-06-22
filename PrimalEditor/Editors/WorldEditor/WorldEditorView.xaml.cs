@@ -47,7 +47,10 @@ namespace PrimalEditor.Editors
 
         private void OnNewProject(object sender, ExecutedRoutedEventArgs e)
         {
-
+            ProjectBrowserDialg.GotoNewProjectTab = true;
+            Project.Current?.Unload();
+            Application.Current.MainWindow.DataContext = null;
+            Application.Current.MainWindow.Close();
         }
 
         private void OnOpenProject(object sender, ExecutedRoutedEventArgs e)
