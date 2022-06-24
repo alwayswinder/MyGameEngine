@@ -18,16 +18,16 @@ namespace PrimalEditor.Content
         public byte[] IconSmall { get; }
         public string FullPath { get; }
         public string FileName => Path.GetFileNameWithoutExtension(FullPath);
-        public bool IsDirector { get; }
+        public bool IsDirectory { get; }
         public DateTime DateModified { get; }
         public long? Size { get; }
         public ContentInfo(string fullPath, byte[] icon = null, byte[] smallIcon = null,DateTime? lastModified=null)
         {
             Debug.Assert(File.Exists(fullPath) || Directory.Exists(fullPath));
             var info = new FileInfo(fullPath);
-            IsDirector = ContentHelper.IsDirectory(fullPath);
+            IsDirectory = ContentHelper.IsDirectory(fullPath);
             DateModified = lastModified ?? info.LastWriteTime;
-            Size = IsDirector ? (long?)null : info.Length;
+            Size = IsDirectory ? (long?)null : info.Length;
             Icon = icon;
             IconSmall = IconSmall ?? icon;
             FullPath = fullPath;
@@ -122,6 +122,54 @@ namespace PrimalEditor.Content
         private void Refresh(object sender, DelayEventTimerArgs e)
         {
             GetFolderContent();
+        }
+        private static void SaveInfoCache(string file)
+        {
+            lock(_lock)
+            {
+                using var writer = new BinaryWriter(File.Open(file, FileMode.Create, FileAccess.Write));
+                writer.Write(_contentInfoCahce.Keys.Count);
+                foreach(var key in _contentInfoCahce.Keys)
+                {
+                    var info = _contentInfoCahce[key];
+                    writer.Write(key);
+                    writer.Write(info.DateModified.ToBinary());
+                    writer.Write(info.Icon.Length);
+                    writer.Write(info.Icon);
+                }
+            }
+        }
+        private static void LoadInfoCache(string file)
+        {
+            if (!File.Exists(file)) return;
+            try
+            {
+                lock(_lock)
+                {
+                    using var reader = new BinaryReader(File.Open(file, FileMode.Open, FileAccess.Read));
+                    var numEntries = reader.ReadInt32();
+                    _contentInfoCahce.Clear();
+
+                    for(int i=0; i<numEntries;++i)
+                    {
+                        var assetFile = reader.ReadString();
+                        var date = DateTime.FromBinary(reader.ReadInt64());
+                        var iconSize = reader.ReadInt32();
+                        var icon = reader.ReadBytes(iconSize);
+
+                        if(File.Exists(assetFile))
+                        {
+                            _contentInfoCahce[assetFile] = new ContentInfo(assetFile, icon, null, date);
+                        }    
+                    }
+                }
+            }
+            catch(Exception ex)
+            {
+                Debug.WriteLine(ex.Message);
+                Logger.Log(MessageType.Warning, "Failed to read Content Browser cache file.");
+                _contentInfoCahce.Clear();
+            }
         }
         public void Dispose()
         {
