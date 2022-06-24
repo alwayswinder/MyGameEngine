@@ -27,8 +27,8 @@ namespace PrimalEditor.Utilities
     class DelayEventTimerArgs : EventArgs
     {
         public bool RepeatEvent { get; set; }
-        public object Data { get; set; }
-        public DelayEventTimerArgs(object data)
+        public IEnumerable<object> Data{ get; set; }
+        public DelayEventTimerArgs(IEnumerable<object> data)
         {
             Data = data;
         }
@@ -37,14 +37,17 @@ namespace PrimalEditor.Utilities
     {
         private readonly DispatcherTimer _timer;
         private readonly TimeSpan _delay;
+        private readonly List<object> _data = new List<object>();
         private DateTime _lastEventTime = DateTime.Now;
-        private object _data;
 
         public event EventHandler<DelayEventTimerArgs> Triggered;
 
         public void Trigger(object data = null)
         {
-            _data = data;
+            if(data != null)
+            {
+                _data.Add(data);
+            }
             _lastEventTime = DateTime.Now;
             _timer.IsEnabled = true;
         }
@@ -58,6 +61,10 @@ namespace PrimalEditor.Utilities
             if ((DateTime.Now - _lastEventTime) < _delay) return;
             var eventArgs = new DelayEventTimerArgs(_data);
             Triggered?.Invoke(this, eventArgs);
+            if(!eventArgs.RepeatEvent)
+            {
+                _data.Clear();
+            }
             _timer.IsEnabled = eventArgs.RepeatEvent;
         }
         public DelayEventTimer(TimeSpan delay, DispatcherPriority priority = DispatcherPriority.Normal)
