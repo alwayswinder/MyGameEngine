@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.Globalization;
 using System.IO;
 using System.Text;
 using System.Windows;
@@ -17,6 +18,73 @@ using System.Windows.Navigation;
 
 namespace PrimalEditor.Content
 {
+    class DataSizeToStringConverter : IValueConverter
+    {
+        static readonly string[] _sizeSuffixes = { "B", "KB", "MB", "TB", "PB", "ZB", "YB" };
+        static string SizeSuffix(long value, int decimalPlaces = 1)
+        {
+            if(value <= 0 || decimalPlaces < 0) { return string.Empty; }
+
+            int mag = (int)Math.Log(value, 1024);
+            decimal adjustedSize = (decimal)value / (1L << (mag * 10));
+            if(Math.Round(adjustedSize, decimalPlaces) >= 1000)
+            {
+                mag += 1;
+                adjustedSize /= 1024;
+            }
+            return string.Format("{0:n" + decimalPlaces + "}{1}", adjustedSize, _sizeSuffixes[mag]);
+        }
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            return (value is long size) ? SizeSuffix(size, 0) : null;
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+    }
+    //PlainView
+    class PlainView : ViewBase
+    {
+        public static readonly DependencyProperty ItemContainerStyleProperty =
+          ItemsControl.ItemContainerStyleProperty.AddOwner(typeof(PlainView));
+
+        public Style ItemContainerStyle
+        {
+            get { return (Style)GetValue(ItemContainerStyleProperty); }
+            set { SetValue(ItemContainerStyleProperty, value); }
+        }
+
+        public static readonly DependencyProperty ItemTemplateProperty =
+            ItemsControl.ItemTemplateProperty.AddOwner(typeof(PlainView));
+
+        public DataTemplate ItemTemplate
+        {
+            get { return (DataTemplate)GetValue(ItemTemplateProperty); }
+            set { SetValue(ItemTemplateProperty, value); }
+        }
+
+        public static readonly DependencyProperty ItemWidthProperty =
+            WrapPanel.ItemWidthProperty.AddOwner(typeof(PlainView));
+
+        public double ItemWidth
+        {
+            get { return (double)GetValue(ItemWidthProperty); }
+            set { SetValue(ItemWidthProperty, value); }
+        }
+
+        public static readonly DependencyProperty ItemHeightProperty =
+            WrapPanel.ItemHeightProperty.AddOwner(typeof(PlainView));
+
+        public double ItemHeight
+        {
+            get { return (double)GetValue(ItemHeightProperty); }
+            set { SetValue(ItemHeightProperty, value); }
+        }
+
+        protected override object DefaultStyleKey => new ComponentResourceKey(GetType(), "PlainViewResourceId");
+    }
     /// <summary>
     /// Interaction logic for ContentBrowserView.xaml
     /// </summary>
@@ -42,6 +110,7 @@ namespace PrimalEditor.Content
             OnProjectChanged(null, new DependencyPropertyChangedEventArgs(DataContextProperty, null, Project.Current));
             folderListView.AddHandler(Thumb.DragDeltaEvent, new DragDeltaEventHandler(Thumb_DragDelta), true);
             folderListView.Items.SortDescriptions.Add(new SortDescription(_sortedProperty, _sortDirection));
+            GeneratePathStackButtons();
         }
 
         private void Thumb_DragDelta(object sender, DragDeltaEventArgs e)
@@ -84,11 +153,12 @@ namespace PrimalEditor.Content
         private void GeneratePathStackButtons()
         {
             var vm = DataContext as ContentBrowser;
-            var path = Directory.GetParent(Path.TrimEndingDirectorySeparator(vm.SelectedFolder)).FullName;
+            //var path = Directory.GetParent(Path.TrimEndingDirectorySeparator(vm.SelectedFolder)).FullName;
+            var path = vm.SelectedFolder;
             var contentPath = Path.TrimEndingDirectorySeparator(vm.ContentFolder);
 
             pathStack.Children.RemoveRange(1, pathStack.Children.Count - 1);
-            if (vm.SelectedFolder == vm.ContentFolder) return;
+            //if (vm.SelectedFolder == vm.ContentFolder) return;
             string[] paths = new string[3];
             string[] labels = new string[3];
 
@@ -113,7 +183,11 @@ namespace PrimalEditor.Content
                 if (i > 0) pathStack.Children.Add(new System.Windows.Shapes.Path());
             }
         }
-
+        private void OnPathStack_Button_Click(object sender, RoutedEventArgs e)
+        {
+            var vm = DataContext as ContentBrowser;
+            vm.SelectedFolder = (sender as Button).DataContext as string;
+        }
         private void OnGridViewColumnHeader_Click(object sender, RoutedEventArgs e)
         {
             var column = sender as GridViewColumnHeader;
@@ -155,6 +229,17 @@ namespace PrimalEditor.Content
                 var info = (sender as FrameworkElement).DataContext as ContentInfo;
                 ExecutreSelection(info);
             }
+        }
+
+        private void OnFolderContent_ListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+//             var item = folderListView.SelectedItem as ContentInfo;
+//             SelectedItem = item?.IsDirectory == true ? null : item;
+        }
+
+        private void OnFolderContent_ListView_Drop(object sender, DragEventArgs e)
+        {
+
         }
     }
 }
