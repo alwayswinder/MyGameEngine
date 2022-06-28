@@ -360,8 +360,9 @@ namespace PrimalEditor.Content
                 {
                     Debug.Assert(lodGroup.LODs.Any());
 
-                    var meshFileName = ContentHelper.SanitizeFileName(path + fileName + "_" +
-                        lodGroup.LODs[0].Name + AssetFileExtension);
+                    var meshFileName = ContentHelper.SanitizeFileName(_lodGroups.Count > 1 ?
+                        (path + fileName + "_" + lodGroup.LODs[0].Name + AssetFileExtension) :
+                        (path + fileName + AssetFileExtension));
                     Guid = Guid.NewGuid();
                     byte[] data = null;
                     using (var writer = new BinaryWriter(new MemoryStream()))

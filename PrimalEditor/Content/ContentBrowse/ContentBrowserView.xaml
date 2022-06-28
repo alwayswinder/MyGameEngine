@@ -280,9 +280,11 @@
                 <Style TargetType="{x:Type ListView}">
                     <Setter Property="Background" Value="{StaticResource Editor.Window.GrayBrush2}"/>
                     <Setter Property="ListBox.BorderThickness" Value="0"/>
-                    <Setter Property="AllowDrop" Value="{Binding Path=AllowDrop, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:ContentBrowserView}}}"/>
+                    <Setter Property="AllowDrop" Value="{Binding Path=AllowDrop, RelativeSource={RelativeSource 
+                        Mode=FindAncestor, AncestorType={x:Type local:ContentBrowserView}}}"/>
                     <Setter Property="View" Value="{StaticResource gridView}"/>
-                    <Setter Property="SelectionMode" Value="{Binding Path=SelectionMode, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:ContentBrowserView}}}"/>
+                    <Setter Property="SelectionMode" Value="{Binding Path=SelectionMode, RelativeSource={RelativeSource 
+                        Mode=FindAncestor, AncestorType={x:Type local:ContentBrowserView}}}"/>
                     <Style.Triggers>
                         <DataTrigger Binding="{Binding Path=IsChecked, ElementName=listViewToggle}" Value="False">
                             <Setter Property="View" Value="{StaticResource tileView}"/>

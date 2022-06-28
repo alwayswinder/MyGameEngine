@@ -88,11 +88,36 @@ namespace PrimalEditor.Content
     /// <summary>
     /// Interaction logic for ContentBrowserView.xaml
     /// </summary>
-    public partial class ContentBrowserView : UserControl
+    public partial class ContentBrowserView : UserControl, IDisposable
     {
         private string _sortedProperty = nameof(ContentInfo.FileName);
         private ListSortDirection _sortDirection;
 
+        public SelectionMode SelectionMode
+        {
+            get => (SelectionMode)GetValue(SelectionModeProperty);
+            set => SetValue(SelectionModeProperty, value); 
+        }
+
+        public static readonly DependencyProperty SelectionModeProperty = DependencyProperty.Register(nameof(SelectionMode),
+            typeof(SelectionMode), typeof(ContentBrowserView), new PropertyMetadata(SelectionMode.Extended));
+
+        public FileAccess FileAccess
+        {
+            get => (FileAccess)GetValue(FileAccessProperty);
+            set => SetValue(FileAccessProperty, value);
+        }
+        public static readonly DependencyProperty FileAccessProperty = DependencyProperty.Register(nameof(FileAccess),
+            typeof(FileAccess), typeof(ContentBrowserView), new PropertyMetadata(FileAccess.ReadWrite));
+
+
+        internal ContentInfo SelectedItem
+        {
+            get => (ContentInfo)GetValue(SelectedItemProperty);
+            set => SetValue(SelectedItemProperty, value);
+        }
+        public static readonly DependencyProperty SelectedItemProperty = DependencyProperty.Register(nameof(SelectedItem),
+            typeof(ContentInfo), typeof(ContentBrowserView), new PropertyMetadata(null));
         public ContentBrowserView()
         {
             DataContext = null;
@@ -211,7 +236,14 @@ namespace PrimalEditor.Content
             var info = (sender as FrameworkElement).DataContext as ContentInfo;
             ExecuteSelection(info);
         }
-
+        private void OnContent_Item_KeyDown(object sender, KeyEventArgs e)
+        {
+            if(e.Key == Key.Enter)
+            {
+                var info = (sender as FrameworkElement).DataContext as ContentInfo;
+                ExecuteSelection(info);
+            }
+        }
         private void ExecuteSelection(ContentInfo info)
         {
             if (info == null) return;
@@ -221,24 +253,25 @@ namespace PrimalEditor.Content
                 vm.SelectedFolder = info.FullPath;
             }
         }
-
-        private void OnContent_Item_KeyDown(object sender, KeyEventArgs e)
+        private void OnFolderContent_ListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if(e.Key == Key.Enter)
-            {
-                var info = (sender as FrameworkElement).DataContext as ContentInfo;
-                ExecuteSelection(info);
-            }
+            var item = folderListView.SelectedItem as ContentInfo;
+            SelectedItem = item?.IsDirectory == true ? null : item;
         }
+
         private void OnFolderContent_ListView_Drop(object sender, DragEventArgs e)
         {
 
         }
 
-        private void OnFolderContent_ListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        public void Dispose()
         {
-//             var item = folderListView.SelectedItem as ContentInfo;
-//             SelectedItem = item?.IsDirectory == true ? null : item;
+            if (Application.Current?.MainWindow != null)
+            {
+                Application.Current.MainWindow.DataContextChanged -= OnProjectChanged;
+            }
+            (DataContext as ContentBrowser)?.Dispose();
+            DataContext = null;
         }
     }
 }
