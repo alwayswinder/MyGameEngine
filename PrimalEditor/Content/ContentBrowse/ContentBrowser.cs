@@ -35,19 +35,9 @@ namespace PrimalEditor.Content
     }
     class ContentBrowser : ViewModeBase
     {
-        private static readonly object _lock = new object();
         private static readonly DelayEventTimer _refreshTimer = new DelayEventTimer(TimeSpan.FromMilliseconds(250));
-        private static readonly FileSystemWatcher _contentWatcher = new FileSystemWatcher()
-        {
-            IncludeSubdirectories = true,
-            Filter = "",
-            NotifyFilter = NotifyFilters.CreationTime | 
-                           NotifyFilters.DirectoryName | 
-                           NotifyFilters.FileName |
-                           NotifyFilters.LastWrite
-        };
-        private static string _cacheFilePath = string.Empty;
-        private static readonly Dictionary<string, ContentInfo> _contentInfoCahce = new Dictionary<string, ContentInfo>();
+
+       
         public string ContentFolder { get; }
         private readonly ObservableCollection<ContentInfo> _folderContent = new ObservableCollection<ContentInfo>();
         public ReadOnlyObservableCollection<ContentInfo> FolderContent { get; }
@@ -63,13 +53,23 @@ namespace PrimalEditor.Content
                     _selectedFolder = value;
                     if(!string.IsNullOrEmpty(_selectedFolder))
                     {
-                        GetFolderContent();
+                        _ = GetFolderContent();
                     }
                     OnPropertyChanged(nameof(SelectedFolder));
                 }
             }
         }
-        private async void GetFolderContent()
+        private void OnContentModified(object sender, ContentModifiedEventArgs e)
+        {
+            if (Path.GetDirectoryName(e.FullPath) != SelectedFolder) return;
+            _refreshTimer.Trigger();
+        }
+
+        private void Refresh(object sender, DelayEventTimerArgs e)
+        {
+            _ = GetFolderContent();
+        }
+        private async Task GetFolderContent()
         {
             var folderContent = new List<ContentInfo>();
             await Task.Run(() =>
@@ -89,20 +89,11 @@ namespace PrimalEditor.Content
                 {
                     folderContent.Add(new ContentInfo(dir));
                 }
-                lock (_lock)
+
+                foreach (var file in Directory.GetFiles(path, $"*{Asset.AssetFileExtension}"))
                 {
-                    foreach (var file in Directory.GetFiles(path, $"*{Asset.AssetFileExtension}"))
-                    {
-                        var fileinfo = new FileInfo(file);
-                        if (!_contentInfoCahce.ContainsKey(file) || _contentInfoCahce[file].DateModified.IsOlder(fileinfo.LastWriteTime))
-                        {
-                            var info = AssetRegistry.GetAssetInfo(file) ?? Asset.GetAssetInfo(file);
-                            Debug.Assert(info != null);
-                            _contentInfoCahce[file] = new ContentInfo(file, info.Icon);
-                        }
-                        Debug.Assert(_contentInfoCahce.ContainsKey(file));
-                        folderContent.Add(_contentInfoCahce[file]);
-                    }
+                    var fileinfo = new FileInfo(file);
+                    folderContent.Add(ContentInfoCache.Add(file));
                 }
             }
             catch(IOException ex)
@@ -111,74 +102,11 @@ namespace PrimalEditor.Content
             }
             return folderContent;
         }
-        private async void OnContentModified(object sender, FileSystemEventArgs e)
-        {
-            if (Path.GetDirectoryName(e.FullPath) != SelectedFolder) return;
-            await Application.Current.Dispatcher.BeginInvoke(new Action(() =>
-            {
-                _refreshTimer.Trigger();
-            }));
-        }
-        private void Refresh(object sender, DelayEventTimerArgs e)
-        {
-            GetFolderContent();
-        }
-        private static void SaveInfoCache(string file)
-        {
-            lock(_lock)
-            {
-                using var writer = new BinaryWriter(File.Open(file, FileMode.Create, FileAccess.Write));
-                writer.Write(_contentInfoCahce.Keys.Count);
-                foreach(var key in _contentInfoCahce.Keys)
-                {
-                    var info = _contentInfoCahce[key];
-                    writer.Write(key);
-                    writer.Write(info.DateModified.ToBinary());
-                    writer.Write(info.Icon.Length);
-                    writer.Write(info.Icon);
-                }
-            }
-        }
-        private static void LoadInfoCache(string file)
-        {
-            if (!File.Exists(file)) return;
-            try
-            {
-                lock(_lock)
-                {
-                    using var reader = new BinaryReader(File.Open(file, FileMode.Open, FileAccess.Read));
-                    var numEntries = reader.ReadInt32();
-                    _contentInfoCahce.Clear();
-
-                    for(int i=0; i<numEntries;++i)
-                    {
-                        var assetFile = reader.ReadString();
-                        var date = DateTime.FromBinary(reader.ReadInt64());
-                        var iconSize = reader.ReadInt32();
-                        var icon = reader.ReadBytes(iconSize);
-
-                        if(File.Exists(assetFile))
-                        {
-                            _contentInfoCahce[assetFile] = new ContentInfo(assetFile, icon, null, date);
-                        }    
-                    }
-                }
-            }
-            catch(Exception ex)
-            {
-                Debug.WriteLine(ex.Message);
-                Logger.Log(MessageType.Warning, "Failed to read Content Browser cache file.");
-                _contentInfoCahce.Clear();
-            }
-        }
+    
         public void Dispose()
         {
-            ((IDisposable)_contentWatcher).Dispose();
-            if(!string.IsNullOrEmpty(_cacheFilePath))
-            {
-                SaveInfoCache(_cacheFilePath);
-                _cacheFilePath = string.Empty;
-            }
+            ContentWatcher.ContentModified -= OnContentModified;
+            ContentInfoCache.Save();
         }
         public ContentBrowser(Project project)
         {
@@ -189,21 +117,11 @@ namespace PrimalEditor.Content
             ContentFolder = contentFolder;
             SelectedFolder = contentFolder;
             FolderContent = new ReadOnlyObservableCollection<ContentInfo>(_folderContent);
-
-            if(string.IsNullOrEmpty(_cacheFilePath))
-            {
-                _cacheFilePath = $@"{project.Path}.Primal\ContentInfoCache.bin";
-                LoadInfoCache(_cacheFilePath);
-            }
-            _contentWatcher.Path = contentFolder;
-            _contentWatcher.Changed += OnContentModified;
-            _contentWatcher.Created += OnContentModified;
-            _contentWatcher.Deleted += OnContentModified;
-            _contentWatcher.Renamed += OnContentModified;
-            _contentWatcher.EnableRaisingEvents = true;
-
+            ContentWatcher.ContentModified += OnContentModified;
             _refreshTimer.Triggered += Refresh;
+
         }
+
 
     }
 }

@@ -209,10 +209,10 @@ namespace PrimalEditor.Content
         private void OnContent_Item_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
             var info = (sender as FrameworkElement).DataContext as ContentInfo;
-            ExecutreSelection(info);
+            ExecuteSelection(info);
         }
 
-        private void ExecutreSelection(ContentInfo info)
+        private void ExecuteSelection(ContentInfo info)
         {
             if (info == null) return;
             if(info.IsDirectory)
@@ -227,19 +227,18 @@ namespace PrimalEditor.Content
             if(e.Key == Key.Enter)
             {
                 var info = (sender as FrameworkElement).DataContext as ContentInfo;
-                ExecutreSelection(info);
+                ExecuteSelection(info);
             }
+        }
+        private void OnFolderContent_ListView_Drop(object sender, DragEventArgs e)
+        {
+
         }
 
         private void OnFolderContent_ListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
 //             var item = folderListView.SelectedItem as ContentInfo;
 //             SelectedItem = item?.IsDirectory == true ? null : item;
-        }
-
-        private void OnFolderContent_ListView_Drop(object sender, DragEventArgs e)
-        {
-
         }
     }
 }
