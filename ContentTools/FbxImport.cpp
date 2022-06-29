@@ -70,10 +70,14 @@ namespace primal::tools
 					lod.name = lod.meshes[0].name;
 					_scene->lod_groups.emplace_back(lod);
 				}
-				else if(node->GetLodGroup())
-				{
-					get_lod_group(node);
-				}
+			}
+			else if (node->GetLodGroup())
+			{
+				get_lod_group(node);
+			}
+			else
+			{
+				get_scene(node);
 			}
 		}
 	}
@@ -92,15 +96,76 @@ namespace primal::tools
 			m.lod_id = (u32)meshes.size();
 			m.lod_threshold = -1.f;
 			m.name = (node->GetName()[0] != '\0') ? node->GetName() : fbx_mesh->GetName();
-			/*if (get_mesh_data(fbx_mesh, m))
+
+			if (get_mesh_data(fbx_mesh, m))
 			{
 				meshes.emplace_back(m);
-			}*/
+			}
 		}
 	}
 	void fbx_context::get_lod_group(FbxNode* node)
 	{
 
+	}
+
+	bool fbx_context::get_mesh_data(FbxMesh * fbx_mesh, mesh& m)
+	{
+		assert(fbx_mesh);
+
+		const s32 num_polys{ fbx_mesh->GetPolygonCount() };
+		if (num_polys <= 0)return false;
+
+		const s32 num_vertices{ fbx_mesh->GetControlPointsCount() };
+		FbxVector4* vertices{ fbx_mesh->GetControlPoints() };
+		const s32 num_indices{ fbx_mesh->GetPolygonVertexCount() };
+		s32* indices{ fbx_mesh->GetPolygonVertices() };
+
+		assert(num_vertices > 0 && vertices && num_indices > 0 && indices);
+		if (!(num_vertices > 0 && vertices && num_indices > 0 && indices))return false;
+
+		m.raw_indices.resize(num_indices);
+		utl::vector vertex_ref(num_vertices, u32_invalid_id);
+
+		for (s32 i{ 0 }; i<num_indices; ++i)
+		{
+			const s32 v_idx{ indices[i] };
+			if (vertex_ref[v_idx] != u32_invalid_id)
+			{
+				m.raw_indices[i] = vertex_ref[v_idx];
+			}
+			else
+			{
+				FbxVector4 v = vertices[v_idx] * _scene_scale;
+				m.raw_indices[i] = (u32)m.positions.size();
+				vertex_ref[v_idx] = m.raw_indices[i];
+				m.positions.emplace_back((f32)v[0], (f32)v[1], (f32)v[2]);
+			}
+		}
+		assert(m.raw_indices.size() % 3 == 0);
+
+		assert(num_polys > 0);
+		FbxLayerElementArrayTemplate<s32>* mtl_indices;
+		if (fbx_mesh->GetMaterialIndices(&mtl_indices))
+		{
+			for (s32 i{0}; i<num_polys; ++i)
+			{
+				const s32 mtl_index{ mtl_indices->GetAt(i) };
+				assert(mtl_indices >= 0);
+				m.material_indices.emplace_back((u32)mtl_index);
+				if (std::find(m.material_used.begin(), m.material_used.end(), (u32)mtl_index) == m.material_used.end())
+				{
+					m.material_used.emplace_back((u32)mtl_index);
+				}
+			}
+		}
+		const bool import_normals{ !_scene_data->settings.calculate_normals };
+		const bool import_tangents{ !_scene_data->settings.calculate_tangents };
+
+		if (import_normals)
+		{
+			FbxArray<FbxVector4> normals;
+			if()
+		}
 	}
 
 	EDITOR_INTERFACE void ImportFbx(const char* file, scene_data* data)
